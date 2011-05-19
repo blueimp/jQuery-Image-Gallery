@@ -1,0 +1,30 @@
+@charset 'UTF-8';
+/*
+ * jQuery Image Gallery Plugin CSS 1.0
+ * https://github.com/blueimp/jQuery-Image-Gallery
+ *
+ * Copyright 2011, Sebastian Tschan
+ * https://blueimp.net
+ *
+ * Licensed under the MIT license:
+ * http://creativecommons.org/licenses/MIT/
+ */
+
+.gallery-dialog-loader {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 32px;
+  height: 32px;
+  margin: -16px 0 0 -16px;
+  background: url(loading.gif);
+}
+
+/* IE 6: */
+*html .gallery-dialog-loader {
+  position: absolute;
+}
+
+.gallery-dialog .ui-dialog-content {
+  text-align: center;
+}
