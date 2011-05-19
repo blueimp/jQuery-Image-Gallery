@@ -19,7 +19,7 @@ jQuery UI dialog initialization and allows to set any dialog options:
         title: 'Image Gallery', // Sets the dialog title
         offsetWidth: 50, // Offset of image width to viewport width
         offsetHeight: 50, // Offset of image height to viewport height
-        slideshow: 50000, // Shows the next image after 5000 ms
+        slideshow: 5000, // Shows the next image after 5000 ms
         canvas: true, // Displays images as canvas element
         namespace: 'myimagegallery' // event handler namespace
     });
