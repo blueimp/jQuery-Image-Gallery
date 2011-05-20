@@ -1,5 +1,5 @@
 /*
- * jQuery Image Gallery Plugin JS Example 1.1
+ * jQuery Image Gallery Plugin JS Example 1.1.1
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -34,7 +34,7 @@ $(function () {
         $('a[rel="gallery"]').imagegallery('destroy');
         $('a[rel="gallery"]').imagegallery({
             fullscreen: $('#option-fullscreen').is(':checked'),
-            slideshow: $(this).is(':checked') && 5000
+            slideshow: $('#option-slideshow').is(':checked') && 5000
         });
     });
 

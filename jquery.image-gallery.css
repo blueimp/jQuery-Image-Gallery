@@ -1,6 +1,6 @@
 @charset 'UTF-8';
 /*
- * jQuery Image Gallery Plugin CSS 1.1
+ * jQuery Image Gallery Plugin CSS 1.1.1
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -56,7 +56,7 @@
   float: left;
 }
 
-.gallery-fullscreen .ui-widget-overlay {
+.gallery-body-fullscreen .ui-widget-overlay {
   opacity: 1;
   filter: alpha(opacity=100);
 }
