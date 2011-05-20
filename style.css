@@ -19,6 +19,10 @@ html, body {
   font-size: 14px;
 }
 
+img {
+  border: 0;
+}
+
 #demo {
   padding: 90px 60px;
 }
