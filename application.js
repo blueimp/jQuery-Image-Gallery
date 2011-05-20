@@ -1,5 +1,5 @@
 /*
- * jQuery Image Gallery Plugin JS Example 1.0
+ * jQuery Image Gallery Plugin JS Example 1.1
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -13,7 +13,6 @@
 /*global $ */
 
 $(function () {
-
     // Initialize the Image Gallery plugin:
     $('a[rel="gallery"]').imagegallery();
 
@@ -27,6 +26,16 @@ $(function () {
                 $(this).val() + '/jquery-ui.css'
             )
         );
+    });
+    
+    // Initialize the options checkboxes:
+    $('#options').buttonset();
+    $('#options input').change(function () {
+        $('a[rel="gallery"]').imagegallery('destroy');
+        $('a[rel="gallery"]').imagegallery({
+            fullscreen: $('#option-fullscreen').is(':checked'),
+            slideshow: $(this).is(':checked') && 5000
+        });
     });
 
     // Load images via flickr for demonstration purposes:
@@ -47,7 +56,7 @@ $(function () {
                     .append($('<img>').prop('src', url + '_s.jpg'))
                     .prop('href', url + '_b.jpg')
                     .prop('title', photo.title)
-                    .appendTo('body');
+                    .appendTo('#demo');
             });
         }
     });

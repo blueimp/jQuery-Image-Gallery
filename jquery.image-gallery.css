@@ -1,6 +1,6 @@
 @charset 'UTF-8';
 /*
- * jQuery Image Gallery Plugin CSS 1.0
+ * jQuery Image Gallery Plugin CSS 1.1
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -10,7 +10,7 @@
  * http://creativecommons.org/licenses/MIT/
  */
 
-.gallery-dialog-loader {
+.gallery-loader {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -21,10 +21,42 @@
 }
 
 /* IE 6: */
-*html .gallery-dialog-loader {
+*html .gallery-loader {
   position: absolute;
 }
 
 .gallery-dialog .ui-dialog-content {
   text-align: center;
+}
+
+.gallery-dialog .ui-dialog-content img {
+  border: 0;
+}
+
+.gallery-dialog-fullscreen {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  -webkit-box-shadow: 0 0 20px #000;
+  -moz-box-shadow: 0 0 20px #000;
+  box-shadow: 0 0 20px #000;
+}
+
+.gallery-dialog-fullscreen .ui-dialog-titlebar {
+  display: none;
+}
+
+.gallery-dialog-fullscreen .ui-dialog-content {
+  padding: 0;
+  border: 0;
+}
+
+.gallery-dialog-fullscreen .ui-dialog-content img,
+.gallery-dialog-fullscreen .ui-dialog-content canvas {
+  float: left;
+}
+
+.gallery-fullscreen .ui-widget-overlay {
+  opacity: 1;
+  filter: alpha(opacity=100);
 }

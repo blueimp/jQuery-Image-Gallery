@@ -1,5 +1,5 @@
 /*
- * jQuery Image Gallery Plugin 1.1
+ * jQuery Image Gallery Plugin 1.2
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -9,49 +9,56 @@
  * http://creativecommons.org/licenses/MIT/
  */
 
+/*
+ * The Image Gallery plugin makes use of jQuery's live method to attach
+ * a click handler to all elements that match the selector of the given
+ * jQuery collection, now and in the future:
+ * 
+ * $('a[rel=gallery]').imagegallery();
+ * 
+ * The click handler opens the linked images in a jQuery UI dialog.
+ * The options object given to the imagegallery method is passed to the
+ * jQuery UI dialog initialization and allows to set any dialog options:
+ * 
+ * $('a[rel=gallery]').imagegallery({
+ *     open: function (event, ui) {}, // called on dialogopen
+ *     title: 'Image Gallery', // Sets the dialog title
+ *     offsetWidth: 50, // Offset of image width to viewport width
+ *     offsetHeight: 50, // Offset of image height to viewport height
+ *     slideshow: 5000, // Shows the next image after 5000 ms
+ *     fullscreen: true, // Displays images fullscreen
+ *     canvas: true, // Displays images as canvas element
+ *     namespace: 'myimagegallery' // event handler namespace
+ * });
+ * 
+ * offsetWidth, offsetHeight, canvas, slideshow and namespace are
+ * imagegallery specific options, while open and title are jQuery UI
+ * dialog options.
+ * 
+ * The click event listeners can be removed by calling the imagegallery
+ * method with "destroy" as first argument, using the same selector for
+ * the jQuery collection and the same namespace:
+ * 
+ * $('a[rel=gallery]').imagegallery('destroy', {namespace: 'ns'});
+ * 
+ * To directly open an image with gallery functionality, the imagegallery
+ * method can be called with "open" as first argument:
+ * 
+ * $('a:last').imagegallery('open', {selector: 'a[rel=gallery]'});
+ * 
+ * The selector for related images can be overriden with the "selector"
+ * option.
+ */
+
 /*global jQuery, window, document, setTimeout, clearTimeout */
 
 (function ($) {
     'use strict';
 
-    // The Image Gallery plugin makes use of jQuery's live method to attach
-    // a click handler to all elements that match the selector of the given
-    // jQuery collection, now and in the future:
-    // 
-    // $('a[rel=gallery]').imagegallery();
-    // 
-    // The click handler opens the linked images in a jQuery UI dialog.
-    // The options object given to the imagegallery method is passed to the
-    // jQuery UI dialog initialization and allows to set any dialog options:
-    // 
-    // $('a[rel=gallery]').imagegallery({
-    //     open: function (event, ui) {/* called on dialogopen */},
-    //     title: 'Image Gallery', // Sets the dialog title
-    //     offsetWidth: 50, // Offset of image width to viewport width
-    //     offsetHeight: 50, // Offset of image height to viewport height
-    //     slideshow: 5000, // Shows the next image after 5000 ms
-    //     canvas: true, // Displays images as canvas element
-    //     namespace: 'myimagegallery' // event handler namespace
-    // });
-    //
-    // offsetWidth, offsetHeight, canvas, slideshow and namespace are
-    // imagegallery specific options, while open and title are jQuery UI
-    // dialog options.
-    // 
-    // The click event listeners can be removed by calling the imagegallery
-    // method with "destroy" as first argument, using the same selector for
-    // the jQuery collection and the same namespace:
-    // 
-    // $('a[rel=gallery]').imagegallery('destroy', {namespace: 'ns'});
-    // 
-    // To directly open an image with gallery functionality, the imagegallery
-    // method can be called with "open" as first argument:
-    // 
-    // $('a:last').imagegallery('open', {selector: 'a[rel=gallery]'});
-    // 
-    // The selector for related images can be overriden with the "selector"
-    // option.
-    
+    // Adds the imagegallery method to the jQuery object.
+    // Adds a live click handler with the selector of the jQuery collection,
+    // removes the live handler when called with "destroy" as first argument,
+    // and directly opens the first image when called with "open" as argument:
     $.fn.imagegallery = function (options, opts) {
         opts = $.extend({
             namespace: 'imagegallery',
@@ -73,21 +80,25 @@
         return this;
     };
     
-    // Scales the given image (img HTML element) using the given arguments.
-    // Returns a canvas object if useCanvas is true and the browser supports
-    // canvas, else the scaled image:
-    $.fn.imagegallery.scale = function (img, maxWidth, maxHeight, useCanvas) {
+    // Scales the given image (img HTML element) using the given options.
+    // Returns a canvas object if the canvas option is true and the
+    // browser supports canvas, else the scaled image:
+    $.fn.imagegallery.scale = function (img, options) {
+        options = options || {};
         var canvas = document.createElement('canvas'),
             scale = Math.min(
-                (maxWidth || img.width) / img.width,
-                (maxHeight || img.height) / img.height
+                (options.maxWidth || img.width) / img.width,
+                (options.maxHeight || img.height) / img.height
             );
-        if (scale > 1) {
-            scale = 1;
+        if (scale >= 1) {
+            scale = Math.max(
+                (options.minWidth || img.width) / img.width,
+                (options.minHeight || img.height) / img.height
+            );
         }
         img.width = parseInt(img.width * scale, 10);
         img.height = parseInt(img.height * scale, 10);
-        if (!useCanvas || !canvas.getContext) {
+        if (!options.canvas || !canvas.getContext) {
             return img;
         }
         canvas.width = img.width;
@@ -102,7 +113,7 @@
     $.fn.imagegallery.open = function (link, options) {
         link = link instanceof $ ? link[0] : link;
         var rel = link.rel || 'gallery',
-            className = rel.replace(/\W/g, '-') + '-dialog',
+            className = rel.replace(/\W/g, ''),
             links = $((options && options.selector) || 'a[rel="' + rel + '"]'),
             prevLink,
             nextLink,
@@ -111,21 +122,28 @@
             loader = $('<div class="' + className + '-loader"></div>')
                 .hide()
                 .appendTo($('.ui-widget-overlay:last')[0] || 'body')
-                .fadeIn();
+                .fadeIn(),
+            bodyClass = className + '-body';
         options = $.extend({
             namespace: 'imagegallery',
+            offsetWidth: 100,
+            offsetHeight: 100,
             modal: true,
             resizable: false,
             width: 'auto',
             height: 'auto',
             show: 'fade',
             hide: 'fade',
-            offsetWidth: 100,
-            offsetHeight: 100,
             title: link.title ||
                 decodeURIComponent(link.href.split('/').pop()),
-            dialogClass: className
+            dialogClass: className + '-dialog'
         }, options);
+        if (options.fullscreen) {
+            options.offsetWidth = 0;
+            options.offsetHeight = 0;
+            options.dialogClass = className + '-dialog-fullscreen';
+            bodyClass += '-fullscreen';
+        }
         links.each(function (index) {
             // Check the next and next but one link, to account for
             // thumbnail and name linking twice to the same image:
@@ -190,16 +208,26 @@
                     );
                 },
                 slideShow,
-                scaledImage;
-            if (e.type === 'error') {
                 scaledImage = this;
+            if (e.type === 'error') {
                 dialog.addClass('ui-state-error');
             } else {
+                if (options.fullscreen) {
+                    scaledImage = $.fn.imagegallery.scale(
+                        scaledImage,
+                        {
+                            minWidth: $(window).width(),
+                            minHeight: $(window).height()
+                        }
+                    );
+                }
                 scaledImage = $.fn.imagegallery.scale(
-                    this,
-                    $(window).width() - options.offsetWidth,
-                    $(window).height() - options.offsetHeight,
-                    options.canvas
+                    scaledImage,
+                    {
+                        maxWidth: $(window).width() - options.offsetWidth,
+                        maxHeight: $(window).height() - options.offsetHeight,
+                        canvas: options.canvas
+                    }
                 );
             }
             $(document).bind(
@@ -230,12 +258,17 @@
                     }
                 },
                 dialogopen: function () {
+                    $('body').addClass(bodyClass);
+                    $('.ui-widget-overlay:last')
+                        .click(closeDialog);
                     if (typeof options.callback === 'function') {
                         options.callback();
                     }
-                    $('.ui-widget-overlay:last').click(closeDialog);
                 },
                 dialogclose: function () {
+                    if ($('.' + options.dialogClass).length < 2) {
+                        $('body').removeClass(bodyClass);
+                    }
                     clearTimeout(slideShow);
                     $(this).remove();
                 }

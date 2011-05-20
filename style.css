@@ -1,6 +1,6 @@
 @charset 'UTF-8';
 /*
- * jQuery Image Gallery Plugin CSS Example 1.0
+ * jQuery Image Gallery Plugin CSS Example 1.1
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -10,42 +10,20 @@
  * http://creativecommons.org/licenses/MIT/
  */
 
-body {
-  padding: 60px 40px;
+html, body { 
+  height: 100%;
+  margin: 0;
   background: #222;
   color: #fff;
-  font-size: 13px;
+  font-family: Verdana,Arial,sans-serif;
+  font-size: 14px;
 }
 
-#theme-switcher {
+#demo {
+  padding: 90px 60px;
+}
+
+#options {
   position: absolute;
-  top: 20px;
+  top: 30px;
 }
-
-/* 
- * Uncomment the following style definitions
- * for an example gallery dialog customization.
- */
-
-/*
-.gallery-dialog {
-  border: 0;
-  padding: 0;
-  -webkit-box-shadow: 0 0 20px #000;
-  -moz-box-shadow: 0 0 20px #000;
-  box-shadow: 0 0 20px #000;
-}
-
-.gallery-dialog .ui-dialog-titlebar {
-  display: none;
-}
-
-.gallery-dialog .ui-dialog-content {
-  padding: 0;
-  border: 0;
-}
-
-.gallery-dialog .ui-dialog-content img {
-  float: left;
-}
-*/
