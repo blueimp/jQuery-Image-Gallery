@@ -1,5 +1,5 @@
 /*
- * jQuery Image Gallery Plugin JS Example 1.1.2
+ * jQuery Image Gallery Plugin JS Example 1.3
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -28,10 +28,15 @@ $(function () {
         );
     });
     
-    // Initialize the options checkboxes:
-    $('#buttonset').buttonset().find('input').change(function () {
+    // Create a buttonset out of the checkbox options:
+    $('#buttonset').buttonset();
+    
+    // Listen to options changes:
+    $('#buttonset input, #effect').change(function () {
         $('a[rel="gallery"]').imagegallery('destroy');
         $('a[rel="gallery"]').imagegallery({
+            show: $('#effect').val(),
+            hide: $('#effect').val(),
             fullscreen: $('#option-fullscreen').is(':checked'),
             slideshow: $('#option-slideshow').is(':checked') && 5000
         });

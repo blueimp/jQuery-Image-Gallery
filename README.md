@@ -17,17 +17,19 @@ jQuery UI dialog initialization and allows to set any dialog options:
     $('a[rel=gallery]').imagegallery({
         open: function (event, ui) {/* called on dialogopen */},
         title: 'Image Gallery', // Sets the dialog title
+        show: 'scale', // The effect to be used when the dialog is opened
+        hide: 'explode', // The effect to be used when the dialog is closed
         offsetWidth: 50, // Offset of image width to viewport width
         offsetHeight: 50, // Offset of image height to viewport height
         slideshow: 5000, // Shows the next image after 5000 ms
-        fullscreen: true, // Displays images fullscreen
-        canvas: true, // Displays images as canvas element
+        fullscreen: true, // Displays images fullscreen (overrides offsets)
+        canvas: true, // Displays images as canvas elements
         namespace: 'myimagegallery' // event handler namespace
     });
 
-offsetWidth, offsetHeight, slideshow, fullscreen, canvas and
-namespace are imagegallery specific options, while open and title are
-jQuery UI dialog options.
+offsetWidth, offsetHeight, slideshow, fullscreen, canvas and namespace
+are imagegallery specific options, while open, title, show and hide
+are jQuery UI dialog options.
 
 The click event listeners can be removed by calling the imagegallery
 method with "destroy" as first argument, using the same selector for
