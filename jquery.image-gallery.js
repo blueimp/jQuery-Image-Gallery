@@ -1,5 +1,5 @@
 /*
- * jQuery Image Gallery Plugin 1.2
+ * jQuery Image Gallery Plugin 1.2.1
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -197,15 +197,6 @@
                 },
                 closeDialog = function () {
                     dialog.dialog('close');
-                    $(document).unbind(
-                        'keydown.' + options.namespace,
-                        keyHandler
-                    );
-                    $(document).unbind(
-                        'mousewheel.' + options.namespace +
-                            ', DOMMouseScroll.' + options.namespace,
-                        wheelHandler
-                    );
                 },
                 slideShow,
                 scaledImage = this;
@@ -269,6 +260,15 @@
                     if ($('.' + options.dialogClass).length < 2) {
                         $('body').removeClass(bodyClass);
                     }
+                    $(document).unbind(
+                        'keydown.' + options.namespace,
+                        keyHandler
+                    );
+                    $(document).unbind(
+                        'mousewheel.' + options.namespace +
+                            ', DOMMouseScroll.' + options.namespace,
+                        wheelHandler
+                    );
                     clearTimeout(slideShow);
                     $(this).remove();
                 }
