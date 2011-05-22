@@ -1,6 +1,6 @@
 @charset 'UTF-8';
 /*
- * jQuery Image Gallery Plugin CSS 1.3.1
+ * jQuery Image Gallery Plugin CSS 1.3.2
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -20,17 +20,18 @@
   height: 128px;
   margin: -64px 0 0 -64px;
   background: url(loading.gif);
+  z-index: 9999;
 }
 
-/* Fix for IE 6: */
-*html .gallery-loader,
+/* Fix for IE 6 which does not support position:fixed: */
+*html .gallery-dialog-loader,
 *html .gallery-dialog-fullscreen-loader {
   position: absolute;
 }
 
 .gallery-dialog .ui-dialog-content {
-  text-align: center;
   cursor: pointer;
+  text-align: center;
 }
 
 .gallery-dialog .ui-dialog-content img {
@@ -55,12 +56,18 @@
   padding: 0;
   border: 0;
   cursor: pointer;
+  text-align: center;
 }
 
 .gallery-dialog-fullscreen .ui-dialog-content img,
 .gallery-dialog-fullscreen .ui-dialog-content canvas {
   float: left;
   border: 0;
+}
+
+/* Fix for IE 6 which shows a full width dialog: */
+*html .gallery-dialog-fullscreen .ui-dialog-content img {
+  float: none;
 }
 
 .gallery-body-fullscreen .ui-widget-overlay {
@@ -73,11 +80,17 @@
 .gallery-body .ui-effects-wrapper,
 .gallery-body-fullscreen .ui-effects-wrapper,
 .gallery-body-fullscreen .ui-effects-explode {
-  z-index: 9999!important;
+  z-index: 10000!important;
 }
 
 /* Fix for scrollbars showing with some effects: */
 .gallery-body,
 .gallery-body-fullscreen {
   overflow: hidden;
+}
+
+/* Fix for IE 6 showing select boxes on top: */
+*html .gallery-body select,
+*html .gallery-body-fullscreen select {
+  display: none;
 }

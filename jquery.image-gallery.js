@@ -1,5 +1,5 @@
 /*
- * jQuery Image Gallery Plugin 1.3.1
+ * jQuery Image Gallery Plugin 1.3.2
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -379,11 +379,7 @@
             // and the dialog has been opened:
             options._loadingAnimation = $(
                 '<div class="' + options.dialogClass + '-loader"></div>'
-            )
-                .hide()
-                .appendTo(
-                    $('.ui-widget-overlay:last')[0] || document.body
-                );
+            ).hide().appendTo(document.body);
             // This prevents the loading animation to show
             // when the image has already been loaded:
             setTimeout(function () {
@@ -433,9 +429,7 @@
                     $.fn.imagegallery._documentClickHandler
                 );
             $('.ui-widget-overlay:last').remove();
-            if (options._loadingAnimation) {
-                options._loadingAnimation.remove();
-            }
+            options._loadingAnimation.remove();
         },
         
         _escapeHandler: function (e) {
