@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <!--
 /*
- * jQuery Image Gallery Plugin HTML Example 1.1
+ * jQuery Image Gallery Plugin HTML Example 1.1.1
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -21,7 +21,7 @@
 </head>
 <body>
 <div id="demo">
-    <a href="http://github.com/blueimp/jQuery-Image-Gallery"><img style="position: absolute; top: 0; right: 0; border: 0;" src="forkme.png" alt="Fork me on GitHub" /></a>
+    <a id="forkme" href="http://github.com/blueimp/jQuery-Image-Gallery"><img src="forkme.png" alt="Fork me on GitHub" /></a>
     <div id="options">
         <select id="theme-switcher">
             <option value="base">Base</option>
@@ -50,8 +50,11 @@
             <option value="ui-lightness">UI Lightness</option>
             <option value="vader">Vader</option>
         </select>
-        <input type="checkbox" id="option-fullscreen"><label for="option-fullscreen">Fullscreen</label>
-        <input type="checkbox" id="option-slideshow"><label for="option-slideshow">Slideshow</label>
+        <span id="buttonset">
+            <input type="checkbox" id="option-fullscreen"><label for="option-fullscreen">Fullscreen</label>
+            <input type="checkbox" id="option-slideshow"><label for="option-slideshow">Slideshow</label>
+        </span>
+        <span id="contact">Contact: <a href="https://blueimp.net">Sebastian Tschan</a></span>
     </div>
 </div>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>

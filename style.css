@@ -1,6 +1,6 @@
 @charset 'UTF-8';
 /*
- * jQuery Image Gallery Plugin CSS Example 1.1
+ * jQuery Image Gallery Plugin CSS Example 1.1.1
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -19,6 +19,10 @@ html, body {
   font-size: 14px;
 }
 
+a {
+  color: #fff;
+}
+
 img {
   border: 0;
 }
@@ -30,4 +34,10 @@ img {
 #options {
   position: absolute;
   top: 30px;
+}
+
+#forkme {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
