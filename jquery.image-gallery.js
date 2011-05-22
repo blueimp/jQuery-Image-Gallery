@@ -1,5 +1,5 @@
 /*
- * jQuery Image Gallery Plugin 1.3
+ * jQuery Image Gallery Plugin 1.3.1
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -119,6 +119,7 @@
         },
         
         _resetSpecialOptions: function (options) {
+            delete options._img;
             delete options._overlay;
             delete options._dialog;
             delete options._slideShow;
@@ -215,14 +216,24 @@
             }
         },
         
+        _overlayClickHandler: function (e) {
+            var options = e.data;
+            $(this).unbind(
+                'click.' + options.namespace,
+                $.fn.imagegallery._overlayClickHandler
+            );
+            options._dialog.dialog('close');
+        },
+        
         _openHandler: function (e) {
-            var dialog = $(this),
-                options = e.data;
+            var options = e.data;
             $(document.body).addClass(options.bodyClass);
             $('.ui-widget-overlay:last')
-                .click(function () {
-                    dialog.dialog('close');
-                });
+                .bind(
+                    'click.' + options.namespace,
+                    options,
+                    $.fn.imagegallery._overlayClickHandler
+                );
             if (options.callback) {
                 options.callback();
             }
@@ -285,6 +296,16 @@
             var dialog = $('<div></div>'),
                 options = e.data,
                 scaledImage = this;
+            $(document)
+                .unbind(
+                    'keydown.' + options.namespace,
+                    $.fn.imagegallery._escapeHandler
+                )
+                .unbind(
+                    'click.' + options.namespace,
+                    $.fn.imagegallery._documentClickHandler
+                );
+            options._loadingAnimation.remove();
             if (e.type === 'error') {
                 dialog.addClass('ui-state-error');
             } else {
@@ -322,9 +343,6 @@
                     options.slideshow
                 );
             }
-            options._loadingAnimation.fadeOut(function () {
-                $(this).remove();
-            });
         },
         
         _initSiblings: function (options) {
@@ -365,8 +383,12 @@
                 .hide()
                 .appendTo(
                     $('.ui-widget-overlay:last')[0] || document.body
-                )
-                .fadeIn();
+                );
+            // This prevents the loading animation to show
+            // when the image has already been loaded:
+            setTimeout(function () {
+                options._loadingAnimation.show();
+            }, 100);
         },
         
         _getRandomEffect: function () {
@@ -392,6 +414,60 @@
                 options._hide = 'random';
                 options.hide = $.fn.imagegallery._getRandomEffect();
             }
+        },
+        
+        _abortLoading: function (options) {
+            options._img
+                .unbind(
+                    'load.' + options.namespace +
+                        ' error.' + options.namespace,
+                    $.fn.imagegallery._loadHandler
+                );
+            $(document)
+                .unbind(
+                    'keydown.' + options.namespace,
+                    $.fn.imagegallery._escapeHandler
+                )
+                .unbind(
+                    'click.' + options.namespace,
+                    $.fn.imagegallery._documentClickHandler
+                );
+            $('.ui-widget-overlay:last').remove();
+            if (options._loadingAnimation) {
+                options._loadingAnimation.remove();
+            }
+        },
+        
+        _escapeHandler: function (e) {
+            if (e.keyCode === 27) { // ESC key
+                $.fn.imagegallery._abortLoading(e.data);
+            }
+        },
+        
+        _documentClickHandler: function (e) {
+            $.fn.imagegallery._abortLoading(e.data);
+        },
+        
+        _loadImage: function (options) {
+            options._img = $('<img>');
+            $(document)
+                .bind(
+                    'keydown.' + options.namespace,
+                    options,
+                    $.fn.imagegallery._escapeHandler
+                )
+                .bind(
+                    'click.' + options.namespace,
+                    options,
+                    $.fn.imagegallery._documentClickHandler
+                );
+            options._img
+                .bind(
+                    'load.' + options.namespace +
+                        ' error.' + options.namespace,
+                    options,
+                    $.fn.imagegallery._loadHandler
+                ).prop('src', options._link.href);
         },
         
         // Opens the image of the given link in a jQuery UI dialog
@@ -427,11 +503,7 @@
             $.fn.imagegallery._initSiblings(options);
             $.fn.imagegallery._initLoadingAnimation(options);
             $.fn.imagegallery._initEffects(options);
-            $('<img>').bind(
-                'load error',
-                options,
-                $.fn.imagegallery._loadHandler
-            ).prop('src', link.href);
+            $.fn.imagegallery._loadImage(options);
         }
         
     });
