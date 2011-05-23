@@ -1,5 +1,5 @@
 /*
- * jQuery Image Gallery Plugin 1.3.2
+ * jQuery Image Gallery Plugin 1.3.3
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -133,20 +133,6 @@
         _openSibling: function (link, options) {
             var dialog = options._dialog;
             clearTimeout(options._slideShow);
-            $(document)
-                .unbind(
-                    'keydown.' + options.namespace,
-                    $.fn.imagegallery._keyHandler
-                )
-                .unbind(
-                    'mousewheel.' + options.namespace +
-                        ', DOMMouseScroll.' + options.namespace,
-                    $.fn.imagegallery._wheelHandler
-                );
-            dialog.unbind(
-                'click.' + options.namespace,
-                $.fn.imagegallery._clickHandler
-            );
             if (link.href !== options._link.href) {
                 dialog.dialog('widget').hide(options.hide, function () {
                     options._overlay = $('.ui-widget-overlay:last')
@@ -228,6 +214,15 @@
         _openHandler: function (e) {
             var options = e.data;
             $(document.body).addClass(options.bodyClass);
+            $(document)
+                .unbind(
+                    'keydown.' + options.namespace,
+                    $.fn.imagegallery._escapeHandler
+                )
+                .unbind(
+                    'click.' + options.namespace,
+                    $.fn.imagegallery._documentClickHandler
+                );
             $('.ui-widget-overlay:last')
                 .bind(
                     'click.' + options.namespace,
@@ -240,6 +235,14 @@
             // Preload the next and previous images:
             $('<img>').prop('src', options._nextLink.href);
             $('<img>').prop('src', options._prevLink.href);
+            if (options.slideshow) {
+                options._slideShow = setTimeout(
+                    function () {
+                        $.fn.imagegallery._next(options);
+                    },
+                    options.slideshow
+                );
+            }
         },
 
         _closeHandler: function (e) {
@@ -296,15 +299,6 @@
             var dialog = $('<div></div>'),
                 options = e.data,
                 scaledImage = this;
-            $(document)
-                .unbind(
-                    'keydown.' + options.namespace,
-                    $.fn.imagegallery._escapeHandler
-                )
-                .unbind(
-                    'click.' + options.namespace,
-                    $.fn.imagegallery._documentClickHandler
-                );
             options._loadingAnimation.remove();
             if (e.type === 'error') {
                 dialog.addClass('ui-state-error');
@@ -335,14 +329,6 @@
                 .append(scaledImage)
                 .appendTo(document.body)
                 .dialog(options);
-            if (options.slideshow) {
-                options._slideShow = setTimeout(
-                    function () {
-                        $.fn.imagegallery._next(options);
-                    },
-                    options.slideshow
-                );
-            }
         },
         
         _initSiblings: function (options) {
@@ -430,6 +416,7 @@
                 );
             $('.ui-widget-overlay:last').remove();
             options._loadingAnimation.remove();
+            $(document.body).removeClass(options.bodyClass);
         },
         
         _escapeHandler: function (e) {
