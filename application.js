@@ -1,5 +1,5 @@
 /*
- * jQuery Image Gallery Plugin JS Example 1.3.1
+ * jQuery Image Gallery Plugin JS Example 1.3.2
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -9,7 +9,7 @@
  * http://creativecommons.org/licenses/MIT/
  */
 
-/*jslint unparam: true, regexp: true */
+/*jslint white: true, unparam: true, regexp: true */
 /*global $ */
 
 $(function () {

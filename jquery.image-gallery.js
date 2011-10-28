@@ -1,5 +1,5 @@
 /*
- * jQuery Image Gallery Plugin 1.3.4
+ * jQuery Image Gallery Plugin 1.3.5
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -52,7 +52,7 @@
  * option.
  */
 
-/*jslint nomen: true */
+/*jslint white: true, nomen: true */
 /*global jQuery, window, document, setTimeout, clearTimeout */
 
 (function ($) {
