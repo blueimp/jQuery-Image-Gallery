@@ -7,51 +7,84 @@ http://blueimp.github.com/jQuery-Image-Gallery/
 
 Description & Usage
 -------------------
-The Image Gallery plugin makes use of jQuery's live method to attach
-a click handler to all elements that match the selector of the given
-jQuery collection, now and in the future:
+The Image Gallery plugin makes use of jQuery's delegate
+(http://api.jquery.com/delegate/) method to attach
+a click event handler for all child elements matching a selector,
+now or in the future, of the given set of root elements:
 
-    $('a[rel=gallery]').imagegallery();
+    $('#gallery').imagegallery();
+    
+It is possible to override the default selector as well as a number of
+additional gallery options:
+
+    $('#gallery').imagegallery({
+        // selector given to jQuery's delegate method:
+        selector: 'a[rel="gallery"]',
+        // event handler namespace:
+        namespace: 'imagegallery',
+        // Shows the next image after the given time in ms (0 = disabled):
+        slideshow: 0,
+        // Offset of image width to viewport width:
+        offsetWidth: 100,
+        // Offset of image height to viewport height:
+        offsetHeight: 100,
+        // Display images fullscreen (overrides offsets):
+        fullscreen: false,
+        // Display images as canvas elements:
+        canvas: false,
+        // body class added on dialog display:
+        bodyClass: 'gallery-body',
+        // element id of the loading animation:
+        loaderId: 'gallery-loader',
+        // list of available dialog effects,
+        // used when show/hide is set to "random":
+        effects: [
+            'blind',
+            'clip',
+            'drop',
+            'explode',
+            'fade',
+            'fold',
+            'puff',
+            'slide',
+            'scale'
+        ],
+        // The following are jQuery UI dialog options, see
+        // http://jqueryui.com/demos/dialog/#options
+        // for additional options and documentation:
+        modal: true,
+        resizable: false,
+        width: 'auto',
+        height: 'auto',
+        show: 'fade',
+        hide: 'fade',
+        dialogClass: 'gallery-dialog'
+    });
 
 The click handler opens the linked images in a jQuery UI dialog.
 The options object given to the imagegallery method is passed to the
-jQuery UI dialog initialization and allows to set any dialog options:
+jQuery UI dialog (http://jqueryui.com/demos/dialog/) initialization
+and allows to override any dialog options
+(http://jqueryui.com/demos/dialog/#options).
 
-    $('a[rel=gallery]').imagegallery({
-        open: function (event, ui) {/* called on dialogopen */},
-        title: 'Image Gallery', // Sets the dialog title
-        show: 'scale', // The effect to be used when the dialog is opened
-        hide: 'explode', // The effect to be used when the dialog is closed
-        offsetWidth: 50, // Offset of image width to viewport width
-        offsetHeight: 50, // Offset of image height to viewport height
-        slideshow: 5000, // Shows the next image after 5000 ms
-        fullscreen: true, // Displays images fullscreen (overrides offsets)
-        canvas: true, // Displays images as canvas elements
-        namespace: 'myimagegallery' // event handler namespace
+It is possible to change options after widget initialization:
+
+    $('#gallery').imagegallery('option', 'fullscreen', true);
+    $('#gallery').imagegallery('option', {
+        show: 'slide',
+        hide: 'slide'
     });
 
-offsetWidth, offsetHeight, slideshow, fullscreen, canvas and namespace
-are imagegallery specific options, while open, title, show and hide
-are jQuery UI dialog options.
+The Image Gallery widget can also be disabled/enabled/destroyed:
 
-The click event listeners can be removed by calling the imagegallery
-method with "destroy" as first argument, using the same selector for
-the jQuery collection and the same namespace:
-
-    $('a[rel=gallery]').imagegallery('destroy', {namespace: 'ns'});
-
-To directly open an image with gallery functionality, the imagegallery
-method can be called with "open" as first argument:
-
-    $('a:last').imagegallery('open', {selector: 'a[rel=gallery]'});
-
-The selector for related images can be overriden with the "selector"
-option.
+    $('#gallery').imagegallery('disable');
+    $('#gallery').imagegallery('enable');
+    $('#gallery').imagegallery('destroy');
 
 Requirements
 ------------
-  - jQuery v. 1.4+
-  - jQuery UI v. 1.8+ (Required: Dialog)
+  - jQuery v. 1.6+
+  - jQuery UI v. 1.8+ (Required: Widget, Dialog)
 
 License
 -------

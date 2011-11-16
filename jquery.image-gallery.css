@@ -1,6 +1,6 @@
 @charset 'UTF-8';
 /*
- * jQuery Image Gallery Plugin CSS 1.3.2
+ * jQuery Image Gallery Plugin CSS 2.0
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -11,8 +11,7 @@
  */
 
 /* The loading animation: */
-.gallery-dialog-loader,
-.gallery-dialog-fullscreen-loader {
+#gallery-loader {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -24,8 +23,7 @@
 }
 
 /* Fix for IE 6 which does not support position:fixed: */
-*html .gallery-dialog-loader,
-*html .gallery-dialog-fullscreen-loader {
+*html #gallery-loader {
   position: absolute;
 }
 

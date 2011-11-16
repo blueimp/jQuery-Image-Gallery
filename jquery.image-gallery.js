@@ -1,5 +1,5 @@
 /*
- * jQuery Image Gallery Plugin 1.3.5
+ * jQuery Image Gallery Plugin 2.0
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -9,91 +9,69 @@
  * http://creativecommons.org/licenses/MIT/
  */
 
-/*
- * The Image Gallery plugin makes use of jQuery's live method to attach
- * a click handler to all elements that match the selector of the given
- * jQuery collection, now and in the future:
- * 
- * $('a[rel=gallery]').imagegallery();
- * 
- * The click handler opens the linked images in a jQuery UI dialog.
- * The options object given to the imagegallery method is passed to the
- * jQuery UI dialog initialization and allows to set any dialog options:
- * 
- * $('a[rel=gallery]').imagegallery({
- *     open: function (event, ui) {}, // called on dialogopen
- *     title: 'Image Gallery', // Sets the dialog title
- *     show: 'scale', // The effect to be used when the dialog is opened
- *     hide: 'explode', // The effect to be used when the dialog is closed
- *     offsetWidth: 50, // Offset of image width to viewport width
- *     offsetHeight: 50, // Offset of image height to viewport height
- *     slideshow: 5000, // Shows the next image after 5000 ms
- *     fullscreen: true, // Displays images fullscreen (overrides offsets)
- *     canvas: true, // Displays images as canvas elements
- *     namespace: 'myimagegallery' // event handler namespace
- * });
- * 
- * offsetWidth, offsetHeight, slideshow, fullscreen, canvas and namespace
- * are imagegallery specific options, while open, title, show and hide
- * are jQuery UI dialog options.
- * 
- * The click event listeners can be removed by calling the imagegallery
- * method with "destroy" as first argument, using the same selector for
- * the jQuery collection and the same namespace:
- * 
- * $('a[rel=gallery]').imagegallery('destroy', {namespace: 'ns'});
- * 
- * To directly open an image with gallery functionality, the imagegallery
- * method can be called with "open" as first argument:
- * 
- * $('a:last').imagegallery('open', {selector: 'a[rel=gallery]'});
- * 
- * The selector for related images can be overriden with the "selector"
- * option.
- */
-
 /*jslint white: true, nomen: true */
 /*global jQuery, window, document, setTimeout, clearTimeout */
 
 (function ($) {
     'use strict';
 
-    // Adds the imagegallery method to the jQuery object.
-    // Adds a live click handler with the selector of the
-    // jQuery collection, removes the live handler when called
-    // with "destroy" as first argument, and directly opens
-    // the first image when called with "open" as argument:
-    $.fn.imagegallery = function (options, opts) {
-        opts = $.extend({
+    // The Image Gallery plugin makes use of jQuery's delegate method to attach
+    // a click event handler for all child elements matching a selector,
+    // now or in the future, of the given set of root elements.
+    // The click handler opens the linked images in a jQuery UI dialog.
+    // The options object given to the imagegallery method is passed to the
+    // jQuery UI dialog initialization and allows to override any dialog options.
+    $.widget('blueimp.imagegallery', {
+        
+        options: {
+            // selector given to jQuery's delegate method:
+            selector: 'a[rel="gallery"]',
+            // event handler namespace:
             namespace: 'imagegallery',
-            selector: $(this).selector
-        }, opts);
-        if (typeof options === 'string') {
-            if (options === 'destroy') {
-                $(opts.selector).die('click.' + opts.namespace);
-            } else if (options === 'open') {
-                $.fn.imagegallery.open(this, opts);
-            }
-            return this;
-        }
-        options = $.extend(opts, options);
-        $(options.selector).live(
-            'click.' + options.namespace,
-            function (e) {
-                e.preventDefault();
-                $.fn.imagegallery.open(this, options);
-            }
-        );
-        return this;
-    };
-    
-    $.extend($.fn.imagegallery, {
+            // Shows the next image after the given time in ms (0 = disabled):
+            slideshow: 0,
+            // Offset of image width to viewport width:
+            offsetWidth: 100,
+            // Offset of image height to viewport height:
+            offsetHeight: 100,
+            // Display images fullscreen (overrides offsets):
+            fullscreen: false,
+            // Display images as canvas elements:
+            canvas: false,
+            // body class added on dialog display:
+            bodyClass: 'gallery-body',
+            // element id of the loading animation:
+            loaderId: 'gallery-loader',
+            // list of available dialog effects,
+            // used when show/hide is set to "random":
+            effects: [
+                'blind',
+                'clip',
+                'drop',
+                'explode',
+                'fade',
+                'fold',
+                'puff',
+                'slide',
+                'scale'
+            ],
+            // The following are jQuery UI dialog options, see
+            // http://jqueryui.com/demos/dialog/#options
+            // for additional options and documentation:
+            modal: true,
+            resizable: false,
+            width: 'auto',
+            height: 'auto',
+            show: 'fade',
+            hide: 'fade',
+            dialogClass: 'gallery-dialog'
+        },
         
         // Scales the given image (img HTML element)
         // using the given options.
         // Returns a canvas object if the canvas option is true
         // and the browser supports canvas, else the scaled image:
-        scale: function (img, options) {
+        _scale: function (img, options) {
             options = options || {};
             var canvas = document.createElement('canvas'),
                 scale = Math.min(
@@ -118,127 +96,102 @@
             return canvas;
         },
         
-        _resetSpecialOptions: function (options) {
-            delete options._img;
-            delete options._overlay;
-            delete options._dialog;
-            delete options._slideShow;
-            delete options._link;
-            delete options._prevLink;
-            delete options._nextLink;
-            delete options._loadingAnimation;
-            delete options._wheelCounter;
-        },
-        
-        _openSibling: function (link, options) {
-            var dialog = options._dialog;
-            clearTimeout(options._slideShow);
-            if (link.href !== options._link.href) {
-                dialog.dialog('widget').hide(options.hide, function () {
-                    options._overlay = $('.ui-widget-overlay:last')
+        _openSibling: function (link) {
+            var that = this,
+                dialog = this._dialog;
+            clearTimeout(this._slideShow);
+            if (link.href !== this._link.href) {
+                dialog.dialog('widget').hide(this.options.hide, function () {
+                    that._overlay = $('.ui-widget-overlay:last')
                         .clone().appendTo(document.body);
                     dialog
                         .dialog('option', 'hide', null)
                         .dialog('close');
-                    options.callback = function () {
-                        options._overlay.remove();
+                    that._callback = function () {
+                        that._overlay.remove();
+                        that._overlay = null;
                     };
-                    delete options.title;
-                    $.fn.imagegallery.open(link, options);
+                    that._open(link);
                 });
             } else {
                 dialog.dialog('close');
             }
         },
         
-        _prev: function (options) {
-            $.fn.imagegallery._openSibling(
-                options._prevLink,
-                options
-            );
+        _prev: function () {
+            this._openSibling(this._prevLink);
         },
         
-        _next: function (options) {
-            $.fn.imagegallery._openSibling(
-                options._nextLink,
-                options
-            );
+        _next: function () {
+            this._openSibling(this._nextLink);
         },
 
         _keyHandler: function (e) {
+            var that = e.data.imagegallery;
             switch (e.which) {
             case 37: // left
             case 38: // up
-                $.fn.imagegallery._prev(e.data);
+                that._prev();
                 return false;
             case 39: // right
             case 40: // down
-                $.fn.imagegallery._next(e.data);
+                that._next();
                 return false;
             }
         },
         
         _wheelHandler: function (e) {
-            var counter = e.data._wheelCounter =
-                    (e.data._wheelCounter || 0)
-                    + (e.wheelDelta || e.detail || 0);
-            if ((e.wheelDelta && counter >= 120) ||
-                    (!e.wheelDelta && counter < 0)) {
-                $.fn.imagegallery._prev(e.data);
-                e.data._wheelCounter = 0;
-            } else if ((e.wheelDelta && counter <= -120) ||
-                        (!e.wheelDelta && counter > 0)) {
-                $.fn.imagegallery._next(e.data);
-                e.data._wheelCounter = 0;
+            var that = e.data.imagegallery;
+            e = e.originalEvent;
+            that._wheelCounter += (e.wheelDelta || e.detail || 0);
+            if ((e.wheelDelta && that._wheelCounter >= 120) ||
+                    (!e.wheelDelta && that._wheelCounter < 0)) {
+                that._prev();
+                that._wheelCounter = 0;
+            } else if ((e.wheelDelta && that._wheelCounter <= -120) ||
+                        (!e.wheelDelta && that._wheelCounter > 0)) {
+                that._next();
+                that._wheelCounter = 0;
             }
             return false;
         },
         
         _clickHandler: function (e) {
+            var that = e.data.imagegallery;
             if (e.altKey) {
-                $.fn.imagegallery._prev(e.data);
+                that._prev();
             } else {
-                $.fn.imagegallery._next(e.data);
+                that._next();
             }
         },
         
         _overlayClickHandler: function (e) {
-            var options = e.data;
+            var that = e.data.imagegallery;
             $(this).unbind(
-                'click.' + options.namespace,
-                $.fn.imagegallery._overlayClickHandler
+                'click.' + that.options.namespace,
+                that._overlayClickHandler
             );
-            options._dialog.dialog('close');
+            that._dialog.dialog('close');
         },
         
         _openHandler: function (e) {
-            var options = e.data;
+            var that = e.data.imagegallery,
+                options = that.options;
             $(document.body).addClass(options.bodyClass);
-            $(document)
-                .unbind(
-                    'keydown.' + options.namespace,
-                    $.fn.imagegallery._escapeHandler
-                )
-                .unbind(
-                    'click.' + options.namespace,
-                    $.fn.imagegallery._documentClickHandler
-                );
             $('.ui-widget-overlay:last')
                 .bind(
                     'click.' + options.namespace,
-                    options,
-                    $.fn.imagegallery._overlayClickHandler
+                    e.data,
+                    that._overlayClickHandler
                 );
-            if (options.callback) {
-                options.callback();
+            if (that._callback) {
+                that._callback();
+                that._callback = null;
             }
-            // Preload the next and previous images:
-            $('<img>').prop('src', options._nextLink.href);
-            $('<img>').prop('src', options._prevLink.href);
             if (options.slideshow) {
-                options._slideShow = setTimeout(
+                that._slideShow = setTimeout(
                     function () {
-                        $.fn.imagegallery._next(options);
+                        that._next();
                     },
                     options.slideshow
                 );
@@ -246,245 +199,321 @@
         },
 
         _closeHandler: function (e) {
-            var options = e.data;
+            var that = e.data.imagegallery,
+                options = that.options;
             $(document)
                 .unbind(
                     'keydown.' + options.namespace,
-                    $.fn.imagegallery._keyHandler
+                    that._keyHandler
                 )
                 .unbind(
                     'mousewheel.' + options.namespace +
                         ', DOMMouseScroll.' + options.namespace,
-                    $.fn.imagegallery._wheelHandler
+                    that._wheelHandler
                 );
-            clearTimeout(options._slideShow);
-            if (!options._overlay) {
+            clearTimeout(that._slideShow);
+            if (!that._overlay) {
                 $(document.body).removeClass(options.bodyClass);
             }
-            $(this).remove();
+            that._dialog.remove();
         },
 
-        _initDialogHandlers: function (options) {
+        _initDialogHandlers: function () {
+            var that = this,
+                options = this.options,
+                eventData = {imagegallery: this};
             $(document)
                 .bind(
                     'keydown.' + options.namespace,
-                    options,
-                    $.fn.imagegallery._keyHandler
+                    eventData,
+                    this._keyHandler
                 )
                 .bind(
                     'mousewheel.' + options.namespace +
                         ', DOMMouseScroll.' + options.namespace,
-                    options,
-                    $.fn.imagegallery._wheelHandler
+                    eventData,
+                    this._wheelHandler
                 );
-            options._dialog
+            that._dialog
                 .bind(
                     'click.' + options.namespace,
-                    options,
-                    $.fn.imagegallery._clickHandler
+                    eventData,
+                    this._clickHandler
                 )
                 .bind(
                     'dialogopen.' + options.namespace,
-                    options,
-                    $.fn.imagegallery._openHandler
+                    eventData,
+                    this._openHandler
                 )
                 .bind(
                     'dialogclose.' + options.namespace,
-                    options,
-                    $.fn.imagegallery._closeHandler
+                    eventData,
+                    this._closeHandler
                 );
         },
 
         _loadHandler: function (e) {
-            var dialog = $('<div></div>'),
-                options = e.data,
-                scaledImage = this;
-            options._loadingAnimation.remove();
+            var that = e.data.imagegallery,
+                options = that.options,
+                img = that._img[0],
+                offsetWidth = options.offsetWidth,
+                offsetHeight = options.offsetHeight;
+            that._dialog = $('<div></div>');    
+            that._loaded = true;
+            $(document)
+                .unbind(
+                    'keydown.' + options.namespace,
+                    that._escapeHandler
+                )
+                .unbind(
+                    'click.' + options.namespace,
+                    that._documentClickHandler
+                );
+            that._loadingAnimation.hide();
             if (e.type === 'error') {
-                dialog.addClass('ui-state-error');
+                that._dialog.addClass('ui-state-error');
             } else {
                 if (options.fullscreen) {
-                    scaledImage = $.fn.imagegallery.scale(
-                        scaledImage,
+                    img = that._scale(
+                        img,
                         {
                             minWidth: $(window).width(),
                             minHeight: $(window).height()
                         }
                     );
+                    offsetWidth = offsetHeight = 0;
                 }
-                scaledImage = $.fn.imagegallery.scale(
-                    scaledImage,
+                img = that._scale(
+                    img,
                     {
-                        maxWidth: $(window).width() -
-                            options.offsetWidth,
-                        maxHeight: $(window).height() -
-                            options.offsetHeight,
+                        maxWidth: $(window).width() - offsetWidth,
+                        maxHeight: $(window).height() - offsetHeight,
                         canvas: options.canvas
                     }
                 );
             }
-            options._dialog = dialog;
-            $.fn.imagegallery._initDialogHandlers(options);
-            dialog
-                .append(scaledImage)
+            that._initDialogHandlers();
+            that._dialog
+                .append(img)
                 .appendTo(document.body)
                 .dialog(options);
         },
         
-        _initSiblings: function (options) {
-            var link = options._link,
-                links = $(
-                    (options && options.selector) ||
-                        'a[rel="' + (link.rel || 'gallery') + '"]'
+        _abortLoading: function () {
+            var options = this.options;
+            this._img.unbind();
+            $(document)
+                .unbind(
+                    'keydown.' + options.namespace,
+                    this._escapeHandler
+                )
+                .unbind(
+                    'click.' + options.namespace,
+                    this._documentClickHandler
                 );
+            $('.ui-widget-overlay:last').remove();
+            this._loadingAnimation.hide();
+            $(document.body).removeClass(options.bodyClass);
+        },
+        
+        _escapeHandler: function (e) {
+            if (e.keyCode === 27) { // ESC key
+                e.data.imagegallery._abortLoading();
+            }
+        },
+        
+        _documentClickHandler: function (e) {
+            var that = e.data.imagegallery;
+            // The closest() test prevents the click event
+            // bubbling up from aborting the image load:
+            if (!$(e.target).closest(that._link).length) {
+                that._abortLoading();
+            }
+        },
+        
+        _loadImage: function () {
+            var that = this,
+                options = this.options,
+                eventData = {imagegallery: this};
+            this._img = $('<img>');
+            $(document)
+                .bind(
+                    'keydown.' + options.namespace,
+                    eventData,
+                    this._escapeHandler
+                )
+                .bind(
+                    'click.' + options.namespace,
+                    eventData,
+                    this._documentClickHandler
+                );
+            that._loaded = null;
+            this._img.bind(
+                'load error',
+                eventData,
+                this._loadHandler
+            ).prop('src', this._link.href);
+            // The timeout prevents the loading animation to show
+            // when the image has already been loaded:
+            setTimeout(function () {
+                if (!that._loaded) {
+                    that._loadingAnimation.show();
+                }
+            }, 100);
+        },
+
+        _preloadSiblings: function () {
+            // Preload the next and previous images:
+            $('<img>').prop('src', this._nextLink.href);
+            $('<img>').prop('src', this._prevLink.href);
+        },
+
+        _initSiblings: function () {
+            var that = this,
+                link = this._link,
+                links = this.element.find(this.options.selector);
+            this._prevLink = null;
+            this._nextLink = null;
             links.each(function (index) {
                 // Check the next and next but one link, to account for
                 // thumbnail and name linking twice to the same image:
                 if ((links[index + 1] === link ||
                         links[index + 2] === link) &&
                         this.href !== link.href) {
-                    options._prevLink = this; 
+                    that._prevLink = this; 
                 }
                 if ((links[index - 1] === link ||
                         links[index - 2] === link) &&
                         this.href !== link.href) {
-                    options._nextLink = this;
+                    that._nextLink = this;
                     return false;
                 }
             });
-            if (!options._prevLink) {
-                options._prevLink = links[links.length - 1];
+            if (!this._prevLink) {
+                this._prevLink = links[links.length - 1];
             }
-            if (!options._nextLink) {
-                options._nextLink = links[0];
+            if (!this._nextLink) {
+                this._nextLink = links[0];
             }
         },
-        
-        _initLoadingAnimation: function (options) {
-            // The loader is displayed until the image has loaded
-            // and the dialog has been opened:
-            options._loadingAnimation = $(
-                '<div class="' + options.dialogClass + '-loader"></div>'
-            ).hide().appendTo(document.body);
-            // This prevents the loading animation to show
-            // when the image has already been loaded:
-            setTimeout(function () {
-                options._loadingAnimation.show();
-            }, 100);
-        },
-        
+
         _getRandomEffect: function () {
-            return [
-                'blind',
-                'clip',
-                'drop',
-                'explode',
-                'fade',
-                'fold',
-                'puff',
-                'slide',
-                'scale'
-            ][Math.floor(Math.random() * 9)];
+            var effects = this.options.effects;
+            return effects[Math.floor(Math.random() * effects.length)];
         },
         
-        _initEffects: function (options) {
-            if (options.show === 'random' || options._show === 'random') {
-                options._show = 'random';
-                options.show = $.fn.imagegallery._getRandomEffect();
+        _initEffects: function () {
+            var options = this.options;
+            if (options.show === 'random' || this._show === 'random') {
+                this._show = 'random';
+                options.show = this._getRandomEffect();
             }
-            if (options.hide === 'random' || options._hide === 'random') {
-                options._hide = 'random';
-                options.hide = $.fn.imagegallery._getRandomEffect();
+            if (options.hide === 'random' || this._hide === 'random') {
+                this._hide = 'random';
+                options.hide = this._getRandomEffect();
             }
         },
-        
-        _abortLoading: function (options) {
-            options._img
-                .unbind(
-                    'load.' + options.namespace +
-                        ' error.' + options.namespace,
-                    $.fn.imagegallery._loadHandler
-                );
-            $(document)
-                .unbind(
-                    'keydown.' + options.namespace,
-                    $.fn.imagegallery._escapeHandler
-                )
-                .unbind(
-                    'click.' + options.namespace,
-                    $.fn.imagegallery._documentClickHandler
-                );
-            $('.ui-widget-overlay:last').remove();
-            options._loadingAnimation.remove();
-            $(document.body).removeClass(options.bodyClass);
+
+        _open: function (link) {
+            this.options.title = link.title ||
+                decodeURIComponent(link.href.split('/').pop());
+            this._link = link;
+            this._initEffects();
+            this._loadImage();
+            this._initSiblings();
+            this._preloadSiblings();
         },
-        
-        _escapeHandler: function (e) {
-            if (e.keyCode === 27) { // ESC key
-                $.fn.imagegallery._abortLoading(e.data);
-            }
-        },
-        
-        _documentClickHandler: function (e) {
-            $.fn.imagegallery._abortLoading(e.data);
-        },
-        
-        _loadImage: function (options) {
-            options._img = $('<img>');
-            $(document)
-                .bind(
-                    'keydown.' + options.namespace,
-                    options,
-                    $.fn.imagegallery._escapeHandler
-                )
-                .bind(
-                    'click.' + options.namespace,
-                    options,
-                    $.fn.imagegallery._documentClickHandler
-                );
-            options._img
-                .bind(
-                    'load.' + options.namespace +
-                        ' error.' + options.namespace,
-                    options,
-                    $.fn.imagegallery._loadHandler
-                ).prop('src', options._link.href);
-        },
-        
-        // Opens the image of the given link in a jQuery UI dialog
-        // and provides gallery functionality for related images:
-        open: function (link, options) {
-            link = link instanceof $ ? link[0] : link;
-            var className = (link.rel || 'gallery').replace(/\W/g, '');
-            options = $.extend({
-                namespace: 'imagegallery',
-                offsetWidth: 100,
-                offsetHeight: 100,
-                modal: true,
-                resizable: false,
-                width: 'auto',
-                height: 'auto',
-                show: 'fade',
-                hide: 'fade',
-                title: link.title ||
-                    decodeURIComponent(link.href.split('/').pop()),
-                dialogClass: className + '-dialog',
-                bodyClass: className + '-body'
-            }, options);
+
+        _initFullscreenOptions: function () {
+            var options = this.options;
             if (options.fullscreen) {
-                options.offsetWidth = 0;
-                options.offsetHeight = 0;
+                if (!/-fullscreen$/.test(options.dialogClass)) {
+                    options.dialogClass += '-fullscreen';
+                }
+                if (!/-fullscreen$/.test(options.bodyClass)) {
+                    options.bodyClass += '-fullscreen';
+                }
+            } else {
                 options.dialogClass = options.dialogClass
-                    .replace(/dialog$/, 'dialog-fullscreen');
+                    .replace(/-fullscreen$/, '');
                 options.bodyClass = options.bodyClass
-                    .replace(/body$/, 'body-fullscreen');
+                    .replace(/-fullscreen$/, '');
             }
-            $.fn.imagegallery._resetSpecialOptions(options);
-            options._link = link;
-            $.fn.imagegallery._initSiblings(options);
-            $.fn.imagegallery._initLoadingAnimation(options);
-            $.fn.imagegallery._initEffects(options);
-            $.fn.imagegallery._loadImage(options);
+        },
+
+        _initLoadingAnimation: function () {
+            this._loadingAnimation = $(
+                '<div id="' +
+                    this.options.loaderId +
+                    '"></div>'
+            ).hide().appendTo(document.body);
+        },
+        
+        _destroyLoadingAnimation: function () {
+            this._loadingAnimation.remove();
+        },
+        
+        _delegate: function () {
+            var that = this,
+                options = this.options;
+            this.element.delegate(
+                options.selector,
+                'click.' + options.namespace,
+                function (e) {
+                    e.preventDefault();
+                    that._open(this);
+                }
+            );
+        },
+        
+        _undelegate: function () {
+            this.element.undelegate(
+                this.options.selector,
+                'click.' + this.options.namespace
+            );
+        },
+        
+        _setOption: function (key, value) {
+            this._show = this._hide = null;
+            var refresh = (key === 'namespace' || key === 'selector');
+            if (refresh) {
+                this._undelegate();
+            }
+            $.Widget.prototype._setOption.call(this, key, value);
+            if (refresh) {
+                this._delegate();
+            }
+            if ($.inArray(
+                    key,
+                    ['fullscreen', 'dialogClass', 'bodyClass']
+                ) !== -1) {
+                this._initFullscreenOptions();
+            }
+        },
+        
+        _create: function () {
+            this._wheelCounter = 0;
+            this._initLoadingAnimation();
+            this._initFullscreenOptions();
+            this._delegate();
+        },
+        
+        destroy: function () {
+            clearTimeout(this._slideShow);
+            this._undelegate();
+            this._destroyLoadingAnimation();
+            $.Widget.prototype.destroy.call(this);
+        },
+
+        enable: function () {
+            $.Widget.prototype.enable.call(this);
+            this._delegate();
+        },
+        
+        disable: function () {
+            clearTimeout(this._slideShow);
+            this._undelegate();
+            $.Widget.prototype.disable.call(this);
         }
         
     });

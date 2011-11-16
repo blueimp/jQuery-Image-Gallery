@@ -1,5 +1,5 @@
 /*
- * jQuery Image Gallery Plugin JS Example 1.3.2
+ * jQuery Image Gallery Plugin JS Example 2.0
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -10,13 +10,13 @@
  */
 
 /*jslint white: true, unparam: true, regexp: true */
-/*global $ */
+/*global $, document, window */
 
 $(function () {
     'use strict';
 
-    // Initialize the Image Gallery plugin:
-    $('a[rel="gallery"]').imagegallery();
+    // Initialize the Image Gallery widget:
+    $('#gallery').imagegallery();
 
     // Initialize the theme switcher:
     $('#theme-switcher').change(function () {
@@ -35,13 +35,31 @@ $(function () {
     
     // Listen to options changes:
     $('#buttonset input, #effect').change(function () {
-        $('a[rel="gallery"]').imagegallery('destroy');
-        $('a[rel="gallery"]').imagegallery({
+        $('#gallery').imagegallery('option', {
             show: $('#effect').val(),
             hide: $('#effect').val(),
             fullscreen: $('#option-fullscreen').is(':checked'),
             slideshow: $('#option-slideshow').is(':checked') && 5000
         });
+    });
+    
+    // Enable real fullscreen mode:
+    $('#option-fullscreen').click(function () {
+        var checkbox = $(this),
+            root = document.documentElement;
+        if (checkbox.is(':checked')) {
+            if(root.webkitRequestFullScreen) {
+                root.webkitRequestFullScreen(
+                    window.Element.ALLOW_KEYBOARD_INPUT
+                );
+            } else if (root.mozRequestFullScreen) {
+                root.mozRequestFullScreen();
+            }
+        } else {
+            (document.webkitCancelFullScreen ||
+                document.mozCancelFullScreen ||
+                $.noop).apply(document);
+        }
     });
 
     // Load images via flickr for demonstration purposes:
@@ -62,7 +80,7 @@ $(function () {
                     .append($('<img>').prop('src', url + '_s.jpg'))
                     .prop('href', url + '_b.jpg')
                     .prop('title', photo.title)
-                    .appendTo('#demo');
+                    .appendTo('#gallery');
             });
         }
     });
