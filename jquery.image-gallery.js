@@ -1,5 +1,5 @@
 /*
- * jQuery Image Gallery Plugin 2.0
+ * jQuery Image Gallery Plugin 2.1
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -96,14 +96,20 @@
             return canvas;
         },
         
+        _getOverlay: function () {
+            return $(document.body)
+                .children('.ui-widget-overlay').last();
+        },
+        
         _openSibling: function (link) {
             var that = this,
                 dialog = this._dialog;
             clearTimeout(this._slideShow);
+            this._slideShow = null;
             if (link.href !== this._link.href) {
                 dialog.dialog('widget').hide(this.options.hide, function () {
-                    that._overlay = $('.ui-widget-overlay:last')
-                        .clone().appendTo(document.body);
+                    that._overlay = that._getOverlay().clone()
+                        .appendTo(document.body);
                     dialog
                         .dialog('option', 'hide', null)
                         .dialog('close');
@@ -178,7 +184,7 @@
             var that = e.data.imagegallery,
                 options = that.options;
             $(document.body).addClass(options.bodyClass);
-            $('.ui-widget-overlay:last')
+            that._getOverlay()
                 .bind(
                     'click.' + options.namespace,
                     e.data,
@@ -212,10 +218,18 @@
                     that._wheelHandler
                 );
             clearTimeout(that._slideShow);
+            that._slideShow = null;
             if (!that._overlay) {
                 $(document.body).removeClass(options.bodyClass);
+                that._position = null;
             }
             that._dialog.remove();
+            that._dialog = null;
+        },
+        
+        _dragStopHandler: function (e, ui) {
+            var that = e.data.imagegallery;
+            that._position = ui.position;
         },
 
         _initDialogHandlers: function () {
@@ -249,15 +263,23 @@
                     'dialogclose.' + options.namespace,
                     eventData,
                     this._closeHandler
+                )
+                .bind(
+                    'dialogdragstop.' + options.namespace,
+                    eventData,
+                    this._dragStopHandler
                 );
         },
 
         _loadHandler: function (e) {
             var that = e.data.imagegallery,
                 options = that.options,
-                img = that._img[0],
+                img = that._img && that._img[0],
                 offsetWidth = options.offsetWidth,
                 offsetHeight = options.offsetHeight;
+            if (!img) {
+                return;
+            }
             that._dialog = $('<div></div>');    
             that._loaded = true;
             $(document)
@@ -269,6 +291,7 @@
                     'click.' + options.namespace,
                     that._documentClickHandler
                 );
+            that._img = null;
             that._loadingAnimation.hide();
             if (e.type === 'error') {
                 that._dialog.addClass('ui-state-error');
@@ -293,6 +316,12 @@
                 );
             }
             that._initDialogHandlers();
+            if (that._position) {
+                options = $.extend({}, options, {position: [
+                    that._position.left,
+                    that._position.top
+                ]});
+            }
             that._dialog
                 .append(img)
                 .appendTo(document.body)
@@ -311,7 +340,7 @@
                     'click.' + options.namespace,
                     this._documentClickHandler
                 );
-            $('.ui-widget-overlay:last').remove();
+            this._getOverlay().remove();
             this._loadingAnimation.hide();
             $(document.body).removeClass(options.bodyClass);
         },
@@ -415,6 +444,13 @@
         },
 
         _open: function (link) {
+            if (this._dialog) {
+                var copy = $.extend({}, this);
+                copy._dialog = null;
+                copy._position = null;
+                copy._open(link);
+                return;
+            }
             this.options.title = link.title ||
                 decodeURIComponent(link.href.split('/').pop());
             this._link = link;
@@ -451,6 +487,7 @@
         
         _destroyLoadingAnimation: function () {
             this._loadingAnimation.remove();
+            this._loadingAnimation = null;
         },
         
         _delegate: function () {
@@ -500,6 +537,10 @@
         
         destroy: function () {
             clearTimeout(this._slideShow);
+            this._slideShow = null;
+            if (this._dialog) {
+                this._dialog.dialog('close');
+            }
             this._undelegate();
             this._destroyLoadingAnimation();
             $.Widget.prototype.destroy.call(this);
@@ -512,6 +553,7 @@
         
         disable: function () {
             clearTimeout(this._slideShow);
+            this._slideShow = null;
             this._undelegate();
             $.Widget.prototype.disable.call(this);
         }
