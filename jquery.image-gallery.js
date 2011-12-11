@@ -1,5 +1,5 @@
 /*
- * jQuery Image Gallery Plugin 2.1
+ * jQuery Image Gallery Plugin 2.1.1
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -9,7 +9,7 @@
  * http://creativecommons.org/licenses/MIT/
  */
 
-/*jslint white: true, nomen: true */
+/*jslint nomen: true */
 /*global jQuery, window, document, setTimeout, clearTimeout */
 
 (function ($) {
@@ -22,7 +22,7 @@
     // The options object given to the imagegallery method is passed to the
     // jQuery UI dialog initialization and allows to override any dialog options.
     $.widget('blueimp.imagegallery', {
-        
+
         options: {
             // selector given to jQuery's delegate method:
             selector: 'a[rel="gallery"]',
@@ -66,7 +66,7 @@
             hide: 'fade',
             dialogClass: 'gallery-dialog'
         },
-        
+
         // Scales the given image (img HTML element)
         // using the given options.
         // Returns a canvas object if the canvas option is true
@@ -95,12 +95,12 @@
                 .drawImage(img, 0, 0, img.width, img.height);
             return canvas;
         },
-        
+
         _getOverlay: function () {
             return $(document.body)
                 .children('.ui-widget-overlay').last();
         },
-        
+
         _openSibling: function (link) {
             var that = this,
                 dialog = this._dialog;
@@ -123,11 +123,11 @@
                 dialog.dialog('close');
             }
         },
-        
+
         _prev: function () {
             this._openSibling(this._prevLink);
         },
-        
+
         _next: function () {
             this._openSibling(this._nextLink);
         },
@@ -145,7 +145,7 @@
                 return false;
             }
         },
-        
+
         _wheelHandler: function (e) {
             var that = e.data.imagegallery;
             e = e.originalEvent;
@@ -161,7 +161,7 @@
             }
             return false;
         },
-        
+
         _clickHandler: function (e) {
             var that = e.data.imagegallery;
             if (e.altKey) {
@@ -170,7 +170,7 @@
                 that._next();
             }
         },
-        
+
         _overlayClickHandler: function (e) {
             var that = e.data.imagegallery;
             $(this).unbind(
@@ -179,7 +179,7 @@
             );
             that._dialog.dialog('close');
         },
-        
+
         _openHandler: function (e) {
             var that = e.data.imagegallery,
                 options = that.options;
@@ -226,7 +226,7 @@
             that._dialog.remove();
             that._dialog = null;
         },
-        
+
         _dragStopHandler: function (e, ui) {
             var that = e.data.imagegallery;
             that._position = ui.position;
@@ -280,7 +280,7 @@
             if (!img) {
                 return;
             }
-            that._dialog = $('<div></div>');    
+            that._dialog = $('<div></div>');
             that._loaded = true;
             $(document)
                 .unbind(
@@ -327,7 +327,7 @@
                 .appendTo(document.body)
                 .dialog(options);
         },
-        
+
         _abortLoading: function () {
             var options = this.options;
             this._img.unbind();
@@ -344,13 +344,13 @@
             this._loadingAnimation.hide();
             $(document.body).removeClass(options.bodyClass);
         },
-        
+
         _escapeHandler: function (e) {
             if (e.keyCode === 27) { // ESC key
                 e.data.imagegallery._abortLoading();
             }
         },
-        
+
         _documentClickHandler: function (e) {
             var that = e.data.imagegallery;
             // The closest() test prevents the click event
@@ -359,7 +359,7 @@
                 that._abortLoading();
             }
         },
-        
+
         _loadImage: function () {
             var that = this,
                 options = this.options,
@@ -409,7 +409,7 @@
                 if ((links[index + 1] === link ||
                         links[index + 2] === link) &&
                         this.href !== link.href) {
-                    that._prevLink = this; 
+                    that._prevLink = this;
                 }
                 if ((links[index - 1] === link ||
                         links[index - 2] === link) &&
@@ -430,7 +430,7 @@
             var effects = this.options.effects;
             return effects[Math.floor(Math.random() * effects.length)];
         },
-        
+
         _initEffects: function () {
             var options = this.options;
             if (options.show === 'random' || this._show === 'random') {
@@ -484,12 +484,12 @@
                     '"></div>'
             ).hide().appendTo(document.body);
         },
-        
+
         _destroyLoadingAnimation: function () {
             this._loadingAnimation.remove();
             this._loadingAnimation = null;
         },
-        
+
         _delegate: function () {
             var that = this,
                 options = this.options;
@@ -502,14 +502,14 @@
                 }
             );
         },
-        
+
         _undelegate: function () {
             this.element.undelegate(
                 this.options.selector,
                 'click.' + this.options.namespace
             );
         },
-        
+
         _setOption: function (key, value) {
             this._show = this._hide = null;
             var refresh = (key === 'namespace' || key === 'selector');
@@ -527,14 +527,14 @@
                 this._initFullscreenOptions();
             }
         },
-        
+
         _create: function () {
             this._wheelCounter = 0;
             this._initLoadingAnimation();
             this._initFullscreenOptions();
             this._delegate();
         },
-        
+
         destroy: function () {
             clearTimeout(this._slideShow);
             this._slideShow = null;
@@ -550,14 +550,14 @@
             $.Widget.prototype.enable.call(this);
             this._delegate();
         },
-        
+
         disable: function () {
             clearTimeout(this._slideShow);
             this._slideShow = null;
             this._undelegate();
             $.Widget.prototype.disable.call(this);
         }
-        
+
     });
 
 }(jQuery));

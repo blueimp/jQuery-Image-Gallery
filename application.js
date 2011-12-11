@@ -1,5 +1,5 @@
 /*
- * jQuery Image Gallery Plugin JS Example 2.0
+ * jQuery Image Gallery Plugin JS Example 2.0.1
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -9,7 +9,7 @@
  * http://creativecommons.org/licenses/MIT/
  */
 
-/*jslint white: true, unparam: true, regexp: true */
+/*jslint unparam: true, regexp: true */
 /*global $, document, window */
 
 $(function () {
@@ -29,10 +29,10 @@ $(function () {
             )
         );
     });
-    
+
     // Create a buttonset out of the checkbox options:
     $('#buttonset').buttonset();
-    
+
     // Listen to options changes:
     $('#buttonset input, #effect').change(function () {
         $('#gallery').imagegallery('option', {
@@ -42,13 +42,13 @@ $(function () {
             slideshow: $('#option-slideshow').is(':checked') && 5000
         });
     });
-    
+
     // Enable real fullscreen mode:
     $('#option-fullscreen').click(function () {
         var checkbox = $(this),
             root = document.documentElement;
         if (checkbox.is(':checked')) {
-            if(root.webkitRequestFullScreen) {
+            if (root.webkitRequestFullScreen) {
                 root.webkitRequestFullScreen(
                     window.Element.ALLOW_KEYBOARD_INPUT
                 );
