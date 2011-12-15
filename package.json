@@ -1,5 +1,5 @@
 {
-    "name": "blueimp-jquery-image-gallery",
+    "name": "blueimp-image-gallery",
     "version": "2.1.1",
     "title": "jQuery Image Gallery",
     "description": "Image Gallery with Lightbox dialog, transition effects, fullscreen mode and slideshow functionality for jQuery UI.",
