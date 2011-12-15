@@ -1,0 +1,48 @@
+{
+    "name": "blueimp-jquery-image-gallery",
+    "version": "2.1.1",
+    "title": "jQuery Image Gallery",
+    "description": "Image Gallery with Lightbox dialog, transition effects, fullscreen mode and slideshow functionality for jQuery UI.",
+    "keywords": [
+        "image",
+        "gallery",
+        "lightbox",
+        "dialog",
+        "transition",
+        "effects",
+        "fullscreen",
+        "slideshow"
+    ],
+    "homepage": "https://github.com/blueimp/jQuery-Image-Gallery",
+    "author": {
+        "name": "Sebastian Tschan",
+        "url": "https://blueimp.net"
+    },
+    "maintainers": [
+        {
+            "name": "Sebastian Tschan",
+            "url": "https://blueimp.net"
+        }
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/blueimp/jQuery-Image-Gallery.git"
+    },
+    "bugs": "https://github.com/blueimp/jQuery-Image-Gallery/issues",
+    "licenses": [
+        {
+            "type": "MIT",
+            "url": "http://www.opensource.org/licenses/MIT"
+        }
+    ],
+    "dependencies": {
+        "jquery": ">=1.6",
+        "jquery.ui.widget": ">=1.8",
+        "jquery.ui.dialog": ">=1.8"
+    },
+    "files": [
+        "jquery.image-gallery.js",
+        "jquery.image-gallery.css",
+        "loading.gif"
+    ]
+}

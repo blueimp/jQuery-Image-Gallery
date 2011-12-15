@@ -91,8 +91,4 @@ $('#gallery').imagegallery('destroy');
 * [jQuery UI](http://jqueryui.com/) v. 1.8+ (Required: Widget, Dialog)
 
 ## License
-Released under the [MIT license](http://creativecommons.org/licenses/MIT/).
-
-## Source Code & Download
-* Browse and checkout the [source code](https://github.com/blueimp/jQuery-Image-Gallery).
-* [Download](https://github.com/blueimp/jQuery-Image-Gallery/downloads) the project to add the plugin to your website.
+Released under the [MIT license](http://www.opensource.org/licenses/MIT).
