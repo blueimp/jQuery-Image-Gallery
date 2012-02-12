@@ -1,5 +1,5 @@
 /*
- * jQuery Image Gallery Plugin 2.1.1
+ * jQuery Image Gallery Plugin 2.2
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -65,35 +65,6 @@
             show: 'fade',
             hide: 'fade',
             dialogClass: 'gallery-dialog'
-        },
-
-        // Scales the given image (img HTML element)
-        // using the given options.
-        // Returns a canvas object if the canvas option is true
-        // and the browser supports canvas, else the scaled image:
-        _scale: function (img, options) {
-            options = options || {};
-            var canvas = document.createElement('canvas'),
-                scale = Math.min(
-                    (options.maxWidth || img.width) / img.width,
-                    (options.maxHeight || img.height) / img.height
-                );
-            if (scale >= 1) {
-                scale = Math.max(
-                    (options.minWidth || img.width) / img.width,
-                    (options.minHeight || img.height) / img.height
-                );
-            }
-            img.width = parseInt(img.width * scale, 10);
-            img.height = parseInt(img.height * scale, 10);
-            if (!options.canvas || !canvas.getContext) {
-                return img;
-            }
-            canvas.width = img.width;
-            canvas.height = img.height;
-            canvas.getContext('2d')
-                .drawImage(img, 0, 0, img.width, img.height);
-            return canvas;
         },
 
         _getOverlay: function () {
@@ -271,58 +242,31 @@
                 );
         },
 
-        _loadHandler: function (e) {
-            var that = e.data.imagegallery,
-                options = that.options,
-                img = that._img && that._img[0],
+        _loadHandler: function (img) {
+            var options = this.options,
                 offsetWidth = options.offsetWidth,
                 offsetHeight = options.offsetHeight;
-            if (!img) {
-                return;
-            }
-            that._dialog = $('<div></div>');
-            that._loaded = true;
+            this._dialog = $('<div></div>');
+            this._loaded = true;
             $(document)
                 .unbind(
                     'keydown.' + options.namespace,
-                    that._escapeHandler
+                    this._escapeHandler
                 )
                 .unbind(
                     'click.' + options.namespace,
-                    that._documentClickHandler
+                    this._documentClickHandler
                 );
-            that._img = null;
-            that._loadingAnimation.hide();
-            if (e.type === 'error') {
-                that._dialog.addClass('ui-state-error');
-            } else {
-                if (options.fullscreen) {
-                    img = that._scale(
-                        img,
-                        {
-                            minWidth: $(window).width(),
-                            minHeight: $(window).height()
-                        }
-                    );
-                    offsetWidth = offsetHeight = 0;
-                }
-                img = that._scale(
-                    img,
-                    {
-                        maxWidth: $(window).width() - offsetWidth,
-                        maxHeight: $(window).height() - offsetHeight,
-                        canvas: options.canvas
-                    }
-                );
-            }
-            that._initDialogHandlers();
-            if (that._position) {
+            this._img = null;
+            this._loadingAnimation.hide();
+            this._initDialogHandlers();
+            if (this._position) {
                 options = $.extend({}, options, {position: [
-                    that._position.left,
-                    that._position.top
+                    this._position.left,
+                    this._position.top
                 ]});
             }
-            that._dialog
+            this._dialog
                 .append(img)
                 .appendTo(document.body)
                 .dialog(options);
@@ -363,8 +307,25 @@
         _loadImage: function () {
             var that = this,
                 options = this.options,
-                eventData = {imagegallery: this};
-            this._img = $('<img>');
+                eventData = {imagegallery: this},
+                windowWidth = $(window).width(),
+                windowHeight = $(window).height(),
+                loadImageOptions;
+            if (options.fullscreen) {
+                loadImageOptions = {
+                    minWidth: windowWidth,
+                    minHeight: windowHeight,
+                    maxWidth: windowWidth,
+                    maxHeight: windowHeight,
+                    canvas: options.canvas
+                };
+            } else {
+                loadImageOptions = {
+                    maxWidth: windowWidth - options.offsetWidth,
+                    maxHeight: windowHeight - options.offsetHeight,
+                    canvas: options.canvas
+                };
+            }
             $(document)
                 .bind(
                     'keydown.' + options.namespace,
@@ -377,11 +338,13 @@
                     this._documentClickHandler
                 );
             that._loaded = null;
-            this._img.bind(
-                'load error',
-                eventData,
-                this._loadHandler
-            ).prop('src', this._link.href);
+            this._img = $(window.loadImage(
+                this._link.href,
+                function (img) {
+                    that._loadHandler(img);
+                },
+                loadImageOptions
+            ));
             // The timeout prevents the loading animation to show
             // when the image has already been loaded:
             setTimeout(function () {

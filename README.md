@@ -6,8 +6,7 @@
 ## Description & Usage
 The Image Gallery plugin makes use of jQuery's 
 [delegate](http://api.jquery.com/delegate/) method to attach
-a click event handler for all child elements matching a selector,
-now or in the future, of the given set of root elements:
+a click event handler for all child elements of a container:
 
 ```js
 $('#gallery').imagegallery();
@@ -89,6 +88,7 @@ $('#gallery').imagegallery('destroy');
 ## Requirements
 * [jQuery](http://jquery.com/) v. 1.6+
 * [jQuery UI](http://jqueryui.com/) v. 1.8+ (Required: Widget, Dialog)
+* [JavaScript Load Image](https://github.com/blueimp/JavaScript-Load-Image) v. 1.1.4+
 
 ## License
 Released under the [MIT license](http://www.opensource.org/licenses/MIT).

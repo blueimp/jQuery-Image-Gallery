@@ -1,6 +1,6 @@
 @charset 'UTF-8';
 /*
- * jQuery Image Gallery Plugin CSS 2.0
+ * jQuery Image Gallery Plugin CSS 2.2
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -18,7 +18,7 @@
   width: 128px;
   height: 128px;
   margin: -64px 0 0 -64px;
-  background: url(loading.gif);
+  background: url(../img/loading.gif);
   z-index: 9999;
 }
 

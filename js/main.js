@@ -1,5 +1,5 @@
 /*
- * jQuery Image Gallery Plugin JS Example 2.0.1
+ * jQuery Image Gallery Plugin JS Example 2.2
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -71,18 +71,19 @@ $(function () {
             api_key: '7617adae70159d09ba78cfec73c13be3'
         },
 	    dataType: 'jsonp',
-        jsonp: 'jsoncallback',
-	    success: function (data) {
-            $.each(data.photos.photo, function (index, photo) {
-                var url = 'http://farm' + photo.farm + '.static.flickr.com/' +
-                    photo.server + '/' + photo.id + '_' + photo.secret;
-                $('<a rel="gallery"></a>')
-                    .append($('<img>').prop('src', url + '_s.jpg'))
-                    .prop('href', url + '_b.jpg')
-                    .prop('title', photo.title)
-                    .appendTo('#gallery');
-            });
-        }
+        jsonp: 'jsoncallback'
+    }).done(function (data) {
+        var gallery = $('#gallery'),
+            url;
+        $.each(data.photos.photo, function (index, photo) {
+            url = 'http://farm' + photo.farm + '.static.flickr.com/' +
+                photo.server + '/' + photo.id + '_' + photo.secret;
+            $('<a rel="gallery"/>')
+                .append($('<img>').prop('src', url + '_s.jpg'))
+                .prop('href', url + '_b.jpg')
+                .prop('title', photo.title)
+                .appendTo(gallery);
+        });
     });
 
 });

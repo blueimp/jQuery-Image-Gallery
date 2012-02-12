@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <!--
 /*
- * jQuery Image Gallery Plugin HTML Example 2.0.2
+ * jQuery Image Gallery Plugin Demo 2.2
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -15,69 +15,85 @@
 <head>
 <meta charset="utf-8">
 <title>jQuery Image Gallery Demo</title>
-<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/south-street/jquery-ui.css" id="theme">
-<link rel="stylesheet" href="jquery.image-gallery.min.css">
-<link rel="stylesheet" href="style.css">
-<meta name="description" content="Image Gallery with Lightbox dialog, transition effects, fullscreen mode and slideshow functionality for jQuery UI">
+<meta name="description" content="jQuery Image Gallery is an extension to the Dialog component of jQuery UI, to ease navigation between a set of gallery images. It features mouse and keyboard navigation, transition effects, fullscreen mode and slideshow functionality.">
+<!-- jQuery UI styles -->
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/themes/south-street/jquery-ui.css" id="theme">
+<!-- jQuery Image Gallery styles -->
+<link rel="stylesheet" href="css/jquery.image-gallery.min.css">
+<!-- Generic page styles -->
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<div id="demo">
-    <h1>jQuery Image Gallery Demo</h1>
-    <div id="options">
-        <span id="buttonset">
-            <input type="checkbox" id="option-fullscreen"><label for="option-fullscreen">Fullscreen</label>
-            <input type="checkbox" id="option-slideshow"><label for="option-slideshow">Slideshow</label>
-        </span>
-        <select id="effect">
-            <option>blind</option>
-            <option>clip</option>
-            <option>drop</option>
-            <option>explode</option>
-            <option selected>fade</option>
-            <option>fold</option>
-            <option>puff</option>
-            <option>random</option>
-            <option>slide</option>
-            <option>scale</option>
-        </select>
-        <select id="theme-switcher">
-            <option value="base">Base</option>
-            <option value="black-tie">Black Tie</option>
-            <option value="blitzer">Blitzer</option>
-            <option value="cupertino">Cupertino</option>
-            <option value="dark-hive">Dark Hive</option>
-            <option value="dot-luv">Dot Luv</option>
-            <option value="eggplant">Eggplant</option>
-            <option value="excite-bike">Excite Bike</option>
-            <option value="flick">Flick</option>
-            <option value="hot-sneaks">Hot sneaks</option>
-            <option value="humanity">Humanity</option>
-            <option value="le-frog">Le Frog</option>
-            <option value="mint-choc">Mint Choc</option>
-            <option value="overcast">Overcast</option>
-            <option value="pepper-grinder">Pepper Grinder</option>
-            <option value="redmond">Redmond</option>
-            <option value="smoothness">Smoothness</option>
-            <option value="south-street" selected>South Street</option>
-            <option value="start">Start</option>
-            <option value="sunny">Sunny</option>
-            <option value="swanky-purse">Swanky Purse</option>
-            <option value="trontastic">Trontastic</option>
-            <option value="ui-darkness">UI Darkness</option>
-            <option value="ui-lightness">UI Lightness</option>
-            <option value="vader">Vader</option>
-        </select>
-        <span id="info">
-            <a href="https://github.com/blueimp/jQuery-Image-Gallery">Source Code &amp; Download</a>
-            <span>|</span>
-            <span>Contact: <a href="https://blueimp.net">Sebastian Tschan</a></span>
-        </span>
-    </div>
-    <div id="gallery"></div>
+<ul class="nav">
+    <li><a href="https://github.com/blueimp/jQuery-Image-Gallery/downloads">Downloads</a></li>
+    <li><a href="https://github.com/blueimp/jQuery-Image-Gallery">Source Code</a></li>
+    <li><a href="https://github.com/blueimp/jQuery-Image-Gallery">Documentation</a></li>
+    <li><a href="https://github.com/blueimp/jQuery-Image-Gallery/issues">Issues</a></li>
+    <li><a href="https://blueimp.net">&copy; Sebastian Tschan</a></li>
+</ul>
+<br>
+<h1>jQuery Image Gallery Demo</h1>
+<blockquote>
+    <p>jQuery Image Gallery is an extension to the Dialog component of jQuery UI, to ease navigation between a set of gallery images.<br>
+        It features mouse and keyboard navigation, transition effects, fullscreen mode and slideshow functionality.</p>
+</blockquote>
+<br>
+<div>
+    <span id="buttonset">
+        <input type="checkbox" id="option-fullscreen"><label for="option-fullscreen">Fullscreen</label>
+        <input type="checkbox" id="option-slideshow"><label for="option-slideshow">Slideshow</label>
+    </span>
+    <select id="effect">
+        <option>blind</option>
+        <option>clip</option>
+        <option>drop</option>
+        <option>explode</option>
+        <option selected>fade</option>
+        <option>fold</option>
+        <option>puff</option>
+        <option>random</option>
+        <option>slide</option>
+        <option>scale</option>
+    </select>
+    <select id="theme-switcher">
+        <option value="base">Base</option>
+        <option value="black-tie">Black Tie</option>
+        <option value="blitzer">Blitzer</option>
+        <option value="cupertino">Cupertino</option>
+        <option value="dark-hive">Dark Hive</option>
+        <option value="dot-luv">Dot Luv</option>
+        <option value="eggplant">Eggplant</option>
+        <option value="excite-bike">Excite Bike</option>
+        <option value="flick">Flick</option>
+        <option value="hot-sneaks">Hot sneaks</option>
+        <option value="humanity">Humanity</option>
+        <option value="le-frog">Le Frog</option>
+        <option value="mint-choc">Mint Choc</option>
+        <option value="overcast">Overcast</option>
+        <option value="pepper-grinder">Pepper Grinder</option>
+        <option value="redmond">Redmond</option>
+        <option value="smoothness">Smoothness</option>
+        <option value="south-street" selected>South Street</option>
+        <option value="start">Start</option>
+        <option value="sunny">Sunny</option>
+        <option value="swanky-purse">Swanky Purse</option>
+        <option value="trontastic">Trontastic</option>
+        <option value="ui-darkness">UI Darkness</option>
+        <option value="ui-lightness">UI Lightness</option>
+        <option value="vader">Vader</option>
+    </select>
 </div>
+<br>
+<br>
+<!-- The container element for the gallery images -->
+<div id="gallery"></div>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
-<script src="jquery.image-gallery.min.js"></script>
-<script src="application.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/jquery-ui.min.js"></script>
+<!-- The Load Image plugin, providing image loading and resizing functionality -->
+<script src="http://blueimp.github.com/JavaScript-Load-Image/load-image.min.js"></script>
+<!-- The jQuery Image Gallery plugin -->
+<script src="js/jquery.image-gallery.min.js"></script>
+<!-- The main application script -->
+<script src="js/main.js"></script>
 </body> 
 </html>
