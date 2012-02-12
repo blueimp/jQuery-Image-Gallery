@@ -1,8 +1,8 @@
 {
     "name": "blueimp-image-gallery",
-    "version": "2.1.1",
+    "version": "2.2.0",
     "title": "jQuery Image Gallery",
-    "description": "Image Gallery with Lightbox dialog, transition effects, fullscreen mode and slideshow functionality for jQuery UI.",
+    "description": "jQuery Image Gallery is an extension to the Dialog component of jQuery UI, to ease navigation between a set of gallery images. It features mouse and keyboard navigation, transition effects, fullscreen mode and slideshow functionality.",
     "keywords": [
         "image",
         "gallery",
@@ -38,11 +38,12 @@
     "dependencies": {
         "jquery": ">=1.6",
         "jquery.ui.widget": ">=1.8",
-        "jquery.ui.dialog": ">=1.8"
+        "jquery.ui.dialog": ">=1.8",
+        "blueimp-load-image": ">=1.1.4"
     },
     "files": [
-        "jquery.image-gallery.js",
-        "jquery.image-gallery.css",
-        "loading.gif"
+        "js/jquery.image-gallery.js",
+        "css/jquery.image-gallery.css",
+        "img/loading.gif"
     ]
 }
