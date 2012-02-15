@@ -1,5 +1,5 @@
 /*
- * jQuery Image Gallery Plugin 2.2
+ * jQuery Image Gallery Plugin 2.3
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -10,9 +10,25 @@
  */
 
 /*jslint nomen: true */
-/*global jQuery, window, document, setTimeout, clearTimeout */
+/*global define, window, document, setTimeout, clearTimeout */
 
-(function ($) {
+(function (factory) {
+    'use strict';
+    if (typeof define === 'function' && define.amd) {
+        // Register as an anonymous AMD module:
+        define([
+            'jquery',
+            './load-image.js',
+            'jquery-ui'
+        ], factory);
+    } else {
+        // Browser globals:
+        factory(
+            window.jQuery,
+            window.loadImage
+        );
+    }
+}(function ($, loadImage) {
     'use strict';
 
     // The Image Gallery plugin makes use of jQuery's delegate method to attach
@@ -338,7 +354,7 @@
                     this._documentClickHandler
                 );
             that._loaded = null;
-            this._img = $(window.loadImage(
+            this._img = $(loadImage(
                 this._link.href,
                 function (img) {
                     that._loadHandler(img);
@@ -523,4 +539,4 @@
 
     });
 
-}(jQuery));
+}));
