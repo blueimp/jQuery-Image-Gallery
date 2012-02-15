@@ -40,10 +40,5 @@
         "jquery.ui.widget": ">=1.8",
         "jquery.ui.dialog": ">=1.8",
         "blueimp-load-image": ">=1.1.4"
-    },
-    "files": [
-        "js/jquery.image-gallery.js",
-        "css/jquery.image-gallery.css",
-        "img/loading.gif"
-    ]
+    }
 }
