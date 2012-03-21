@@ -1,6 +1,6 @@
 @charset 'UTF-8';
 /*
- * jQuery File Upload Plugin CSS Example 2.2
+ * jQuery File Upload Plugin CSS Example 2.3
  * https://github.com/blueimp/jQuery-File-Upload
  *
  * Copyright 2012, Sebastian Tschan
@@ -21,6 +21,8 @@ body {
 }
 h1 {
   font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, sans-serif;
+  font-size: 30px;
+  line-height: 36px;
 }
 a {
   color: #08C;
@@ -56,4 +58,11 @@ ul.nav li {
 /* Fix for IE 7: */
 *+html ul.nav li {
   display: inline;
+}
+
+@media (max-width: 480px) {
+  body { 
+    margin: 0;
+    padding: 10px;
+  }
 }
