@@ -1,5 +1,5 @@
 /*
- * jQuery Image Gallery Plugin 2.3
+ * jQuery Image Gallery Plugin 2.4
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -54,6 +54,8 @@
             fullscreen: false,
             // Display images as canvas elements:
             canvas: false,
+            // Defines the image division for previous/next clicks:
+            imageClickDivision: 0.5,
             // body class added on dialog display:
             bodyClass: 'gallery-body',
             // element id of the loading animation:
@@ -150,8 +152,10 @@
         },
 
         _clickHandler: function (e) {
-            var that = e.data.imagegallery;
-            if (e.altKey) {
+            var that = e.data.imagegallery,
+                dialog = that._dialog;
+            if ((e.pageX - dialog.offset().left) / dialog.width() <
+                    that.options.imageClickDivision) {
                 that._prev();
             } else {
                 that._next();
@@ -285,6 +289,11 @@
             this._dialog
                 .append(img)
                 .appendTo(document.body)
+                .toggleClass(
+                    'gallery-dialog-single',
+                    this._prevLink === this._link &&
+                        this._nextLink === this._link
+                )
                 .dialog(options);
         },
 
