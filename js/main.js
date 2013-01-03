@@ -1,5 +1,5 @@
 /*
- * jQuery Image Gallery Plugin JS Example 2.2
+ * jQuery Image Gallery Plugin JS Example 2.5
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -78,7 +78,7 @@ $(function () {
         $.each(data.photos.photo, function (index, photo) {
             url = 'http://farm' + photo.farm + '.static.flickr.com/' +
                 photo.server + '/' + photo.id + '_' + photo.secret;
-            $('<a rel="gallery"/>')
+            $('<a data-gallery="gallery"/>')
                 .append($('<img>').prop('src', url + '_s.jpg'))
                 .prop('href', url + '_b.jpg')
                 .prop('title', photo.title)

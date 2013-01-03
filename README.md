@@ -18,7 +18,7 @@ additional gallery options:
 ```js
 $('#gallery').imagegallery({
     // selector given to jQuery's delegate method:
-    selector: 'a[rel="gallery"]',
+    selector: 'a[data-gallery="gallery"]',
     // event handler namespace:
     namespace: 'imagegallery',
     // Shows the next image after the given time in ms (0 = disabled):

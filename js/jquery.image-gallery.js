@@ -1,5 +1,5 @@
 /*
- * jQuery Image Gallery Plugin 2.4
+ * jQuery Image Gallery Plugin 2.5
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -41,7 +41,7 @@
 
         options: {
             // selector given to jQuery's delegate method:
-            selector: 'a[rel="gallery"]',
+            selector: 'a[data-gallery="gallery"]',
             // event handler namespace:
             namespace: 'imagegallery',
             // Shows the next image after the given time in ms (0 = disabled):
