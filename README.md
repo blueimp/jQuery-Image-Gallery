@@ -1,7 +1,10 @@
 # jQuery Image Gallery Plugin
 
+## Notice
+[blueimp Gallery](http://blueimp.github.io/Gallery/) is a completely rewritten, much improved image gallery, replacing this version.
+
 ## Demo
-[jQuery Image Gallery Demo](http://blueimp.github.com/jQuery-Image-Gallery/)
+[jQuery Image Gallery Demo](http://blueimp.github.io/jQuery-Image-Gallery/)
 
 ## Description & Usage
 The Image Gallery plugin makes use of jQuery's 

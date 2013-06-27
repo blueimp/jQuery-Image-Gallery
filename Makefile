@@ -3,7 +3,7 @@
 default: css js
 
 css:
-	lessc --compress css/jquery.image-gallery.css > css/jquery.image-gallery.min.css
+	node_modules/.bin/lessc --yui-compress css/jquery.image-gallery.css > css/jquery.image-gallery.min.css
 
 js:
-	uglifyjs -nc js/jquery.image-gallery.js > js/jquery.image-gallery.min.js
+	node_modules/.bin/uglifyjs js/load-image.js js/jquery.image-gallery.js -c -m -o js/jquery.image-gallery.min.js
