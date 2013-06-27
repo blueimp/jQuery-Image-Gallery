@@ -91,7 +91,7 @@ $('#gallery').imagegallery('destroy');
 ## Requirements
 * [jQuery](http://jquery.com/) v. 1.6+
 * [jQuery UI](http://jqueryui.com/) v. 1.8+ (Required: Widget, Dialog)
-* [JavaScript Load Image](https://github.com/blueimp/JavaScript-Load-Image) v. 1.1.4+
+* [JavaScript Load Image](https://github.com/blueimp/JavaScript-Load-Image) v. 1.7+ (included)
 
 ## License
 Released under the [MIT license](http://www.opensource.org/licenses/MIT).
