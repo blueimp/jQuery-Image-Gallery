@@ -21,10 +21,6 @@
       "url": "https://blueimp.net"
     }
   ],
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/blueimp/jQuery-Image-Gallery.git"
-  },
   "bugs": "https://github.com/blueimp/jQuery-Image-Gallery/issues",
   "licenses": [
     {
@@ -32,10 +28,11 @@
       "url": "http://www.opensource.org/licenses/MIT"
     }
   ],
-  "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-contrib-uglify": "~0.2.7",
-    "grunt-contrib-jshint": "~0.7.1",
-    "grunt-bump-build-git": "~1.0.0"
-  }
+  "dependencies": {
+    "jquery": ">=1.7",
+    "jquery-ui": ">=1.10",
+    "blueimp-gallery": ">=2.12.0"
+  },
+  "docs": "https://github.com/blueimp/jQuery-Image-Gallery/blob/master/README.md",
+  "demo": "http://blueimp.github.io/jQuery-Image-Gallery/"
 }

@@ -1,0 +1,57 @@
+@charset "UTF-8";
+/*
+ * jQuery Image Gallery Demo CSS 3.0.0
+ * https://github.com/blueimp/jQuery-Image-Gallery
+ *
+ * Copyright 2013, Sebastian Tschan
+ * https://blueimp.net
+ *
+ * Licensed under the MIT license:
+ * http://www.opensource.org/licenses/MIT
+ */
+
+body {
+  margin: 0;
+  padding: 15px 30px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 1em;
+  line-height: 1.4;
+  background: #222;
+  color: #fff;
+}
+h1 {
+  font-family: "Lucida Grande", "Lucida Sans Unicode", Arial, sans-serif;
+}
+a {
+  color: orange;
+  text-decoration: none;
+}
+a:hover {
+  color: lightblue;
+}
+img {
+  border: 0;
+  vertical-align: middle;
+}
+blockquote {
+  padding: 0 20px;
+  margin: 0 0 20px;
+  border-left: 5px solid lightblue;
+}
+
+@media (min-width: 481px) {
+  body {
+    padding: 30px 60px;
+  }
+  .navigation {
+    list-style: none;
+    padding: 0;
+  }
+  .navigation li {
+    display: inline-block;
+  }
+  .navigation li:not(:first-child):before {
+    content: "| ";
+    margin: 0 5px;
+  }
+}

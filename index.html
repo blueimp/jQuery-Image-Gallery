@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <!--
 /*
- * jQuery Image Gallery Plugin Demo 2.5.1
+ * jQuery Image Gallery Plugin Demo 3.0.0
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2011, Sebastian Tschan
@@ -18,43 +18,33 @@
 <![endif]-->
 <meta charset="utf-8">
 <title>jQuery Image Gallery Demo</title>
-<meta name="description" content="jQuery Image Gallery is an extension to the Dialog component of jQuery UI, to ease navigation between a set of gallery images. It features mouse and keyboard navigation, transition effects, fullscreen mode and slideshow functionality.">
+<meta name="description" content="jQuery Image Gallery displays images with the touch-enabled, responsive and customizable blueimp Gallery carousel in the dialog component of jQuery UI. It features swipe, mouse and keyboard navigation, transition effects and on-demand content loading and can be extended to display additional content types.">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- jQuery UI styles -->
 <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/south-street/jquery-ui.css" id="theme">
-<!-- jQuery Image Gallery styles -->
-<link rel="stylesheet" href="css/jquery.image-gallery.min.css">
-<!-- Generic page styles -->
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="http://blueimp.github.io/Gallery/css/blueimp-gallery.min.css">
+<link rel="stylesheet" href="css/demo.css">
 </head>
 <body>
-<ul class="nav">
+<ul class="navigation">
     <li><a href="https://github.com/blueimp/jQuery-Image-Gallery/tags">Download</a></li>
     <li><a href="https://github.com/blueimp/jQuery-Image-Gallery">Source Code</a></li>
     <li><a href="https://github.com/blueimp/jQuery-Image-Gallery/blob/master/README.md">Documentation</a></li>
     <li><a href="https://blueimp.net">&copy; Sebastian Tschan</a></li>
 </ul>
-<p style="font-size: 16px;"><strong>Notice:</strong><br><a href="http://blueimp.github.io/Gallery/">blueimp Gallery</a> is a completely rewritten, much improved image gallery, replacing this version.</p>
 <h1>jQuery Image Gallery Demo</h1>
 <blockquote>
-    <p>jQuery Image Gallery is an extension to the Dialog component of jQuery UI, to ease navigation between a set of gallery images.<br>
-        It features mouse and keyboard navigation, transition effects, fullscreen mode and slideshow functionality.</p>
+    <p>jQuery Image Gallery displays images with the touch-enabled, responsive and customizable <a href="http://blueimp.github.io/Gallery/">blueimp Gallery</a> carousel in the dialog component of <a href="http://jqueryui.com/">jQuery UI</a>.<br>It features swipe, mouse and keyboard navigation, transition effects and on-demand content loading and can be extended to display additional content types.</p>
 </blockquote>
 <br>
-<div>
-    <span id="buttonset">
-        <input type="checkbox" id="option-fullscreen"><label for="option-fullscreen">Fullscreen</label>
-        <input type="checkbox" id="option-slideshow"><label for="option-slideshow">Slideshow</label>
-    </span>
-    <select id="effect">
+<form>
+    <button type="button" id="slideshow-button">Slideshow</button>
+    <select id="effect-switcher">
         <option>blind</option>
         <option>clip</option>
         <option>drop</option>
-        <option>explode</option>
         <option selected>fade</option>
         <option>fold</option>
         <option>puff</option>
-        <option>random</option>
         <option>slide</option>
         <option>scale</option>
     </select>
@@ -85,18 +75,24 @@
         <option value="ui-lightness">UI Lightness</option>
         <option value="vader">Vader</option>
     </select>
+</form>
+<br>
+<!-- The container for the list of example images -->
+<div id="links"></div>
+<!-- The dialog widget -->
+<div id="blueimp-gallery-dialog" data-show="fade" data-hide="fade">
+    <!-- The Gallery widget  -->
+    <div class="blueimp-gallery blueimp-gallery-carousel blueimp-gallery-controls">
+        <div class="slides"></div>
+        <a class="prev">‹</a>
+        <a class="next">›</a>
+        <a class="play-pause"></a>
+    </div>
 </div>
-<br>
-<br>
-<!-- The container element for the gallery images -->
-<div id="gallery"></div>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<!-- The Load Image plugin, providing image loading and resizing functionality -->
-<script src="js/load-image.js"></script>
-<!-- The jQuery Image Gallery plugin -->
+<script src="http://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>
 <script src="js/jquery.image-gallery.js"></script>
-<!-- The main application script -->
-<script src="js/main.js"></script>
+<script src="js/demo.js"></script>
 </body> 
 </html>

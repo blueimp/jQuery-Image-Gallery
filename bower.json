@@ -1,39 +1,42 @@
 {
-    "name": "blueimp-image-gallery",
-    "version": "2.5.1",
-    "title": "jQuery Image Gallery",
-    "description": "jQuery Image Gallery is an extension to the Dialog component of jQuery UI, to ease navigation between a set of gallery images. It features mouse and keyboard navigation, transition effects, fullscreen mode and slideshow functionality.",
-    "keywords": [
-        "image",
-        "gallery",
-        "lightbox",
-        "dialog",
-        "transition",
-        "effects",
-        "fullscreen",
-        "slideshow"
-    ],
-    "homepage": "https://github.com/blueimp/jQuery-Image-Gallery",
-    "author": {
-        "name": "Sebastian Tschan",
-        "url": "https://blueimp.net"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/blueimp/jQuery-Image-Gallery.git"
-    },
-    "licenses": [
-        {
-            "type": "MIT",
-            "url": "http://www.opensource.org/licenses/MIT"
-        }
-    ],
-    "devDependencies": {
-        "uglify-js": "2.3.6",
-        "less": "1.4.0"
-    },
-    "dependencies": {
-        "jquery": ">=1.6",
-        "jquery-ui": ">=1.8"
+  "name": "blueimp-image-gallery",
+  "version": "3.0.0",
+  "title": "jQuery Image Gallery",
+  "description": "jQuery Image Gallery displays images with the touch-enabled, responsive and customizable blueimp Gallery carousel in the dialog component of jQuery UI. It features swipe, mouse and keyboard navigation, transition effects and on-demand content loading and can be extended to display additional content types.",
+  "keywords": [
+    "image",
+    "gallery",
+    "dialog",
+    "transition",
+    "effects"
+  ],
+  "homepage": "https://github.com/blueimp/jQuery-Image-Gallery",
+  "author": {
+    "name": "Sebastian Tschan",
+    "url": "https://blueimp.net"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/blueimp/jQuery-Image-Gallery.git"
+  },
+  "bugs": "https://github.com/blueimp/jQuery-Image-Gallery/issues",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/MIT"
     }
+  ],
+  "dependencies": {
+    "jquery": ">=1.7",
+    "jquery-ui": ">=1.10",
+    "blueimp-gallery": ">=2.12.0"
+  },
+  "main": [
+    "js/jquery.image-gallery.js"
+  ],
+  "ignore": [
+    "/*.*",
+    "css/demo.css",
+    "js/demo.js"
+  ]
 }
