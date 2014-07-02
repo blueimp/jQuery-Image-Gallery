@@ -1,6 +1,6 @@
 {
   "name": "blueimp-image-gallery",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "title": "jQuery Image Gallery",
   "description": "jQuery Image Gallery displays images with the touch-enabled, responsive and customizable blueimp Gallery carousel in the dialog component of jQuery UI. It features swipe, mouse and keyboard navigation, transition effects and on-demand content loading and can be extended to display additional content types.",
   "keywords": [
