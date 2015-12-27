@@ -1,5 +1,5 @@
 /*
- * jQuery Image Gallery plugin 3.0.0
+ * jQuery Image Gallery plugin
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2013, Sebastian Tschan

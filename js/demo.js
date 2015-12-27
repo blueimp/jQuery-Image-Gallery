@@ -1,5 +1,5 @@
 /*
- * jQuery Image Gallery Demo JS 3.0.1
+ * jQuery Image Gallery Demo JS
  * https://github.com/blueimp/jQuery-Image-Gallery
  *
  * Copyright 2013, Sebastian Tschan
